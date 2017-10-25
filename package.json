@@ -1,0 +1,14 @@
+{
+  "name": "phasergamets",
+  "version": "1.0.0",
+  "description": "phaser game",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Joe Grice",
+  "license": "ISC",
+  "dependencies": {
+    "phaser-ce": "^2.9.1"
+  }
+}
