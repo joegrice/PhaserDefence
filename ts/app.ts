@@ -3,7 +3,10 @@ module Game {
         game : Phaser.Game;
         
         constructor() {
-            this.game = new Phaser.Game(960, 640, Phaser.AUTO, 'content');
+            let widthTiles = 12;
+            let heightTiles = 8;
+            let tileSize = 64;
+            this.game = new Phaser.Game(widthTiles * tileSize, heightTiles * tileSize, Phaser.AUTO, 'content');
 
             this.game.state.add("GameRunningState", Game.GameRunningState, false);
             this.game.state.start("GameRunningState");
