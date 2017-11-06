@@ -7,7 +7,7 @@ module Models {
         weapon: Phaser.Weapon;
         lastShotAt: number = 0;
 
-        constructor(game: Phaser.Game, x: number, y: number, towerGroup: Phaser.Group) {
+        constructor(game: Phaser.Game, x: number, y: number, towerGroup: Phaser.Group, bullets: Phaser.Group) {
             this.game = game;
             this.xPos = x;
             this.yPos = y;
@@ -15,7 +15,7 @@ module Models {
             towerGroup.add(this.sprite);
 
             //  Creates 30 bullets, using the 'bullet' graphic
-            this.weapon = this.game.add.weapon(10, "bullet", undefined, );
+            this.weapon = this.game.add.weapon(10, "bullet", undefined, bullets);
             //  The bullet will be automatically killed when it leaves the world bounds
             //  The speed at which the bullet is fired
             this.weapon.bulletSpeed = 400;
