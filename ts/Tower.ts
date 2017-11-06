@@ -20,7 +20,7 @@ module Models {
             //  The speed at which the bullet is fired
             this.weapon.bulletSpeed = 400;
             //  Speed-up the rate of fire, allowing them to shoot 1 bullet every 60ms
-            this.weapon.fireRate = 600;
+            this.weapon.fireRate = 6000;
             // Enable the bullet physics
             this.game.physics.arcade.enable("tower");
             // Set angle will come out of tower

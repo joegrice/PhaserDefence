@@ -12,6 +12,8 @@ module Game {
         towers: Phaser.Group;
         weapon: Phaser.Weapon;
         towerList: Array<Models.Tower>;
+        enemiesGroup: Phaser.Group;
+        bulletTime: number;
 
         preload() {
             this.game.load.tilemap("map", "assets/map.json", null, Phaser.Tilemap.TILED_JSON);
@@ -34,18 +36,21 @@ module Game {
             this.towers = this.game.add.physicsGroup(Phaser.Physics.ARCADE, this.game.world, "towers");
             //this.towers = this.game.add.group(Phaser.Physics.ARCADE, "towers", true, true);
 
-            /*var enemy1 = this.game.add.sprite(200, 200, "enemy1");
-            enemy1.animations.add('walk');
-            enemy1.animations.play('walk', 15, true);*/
-
             this.marker = this.game.add.graphics();
             this.marker.lineStyle(2, 0xffffff, 1);
             this.marker.drawRect(0, 0, 64, 64);
 
+            // Enemeies
+            this.enemiesGroup = this.game.add.group();
+            this.enemiesGroup.type = Phaser.SPRITE;
+            this.enemiesGroup.enableBody = true;
+            this.enemiesGroup.physicsBodyType = Phaser.Physics.ARCADE;
+
+            this.createDoctors();
+
             this.game.input.addMoveCallback((pointer: Phaser.Pointer, x: number, y: number) => {
                 this.marker.x = this.layer.getTileX(x) * 64;
                 this.marker.y = this.layer.getTileY(y) * 64;
-                //console.log(`Hover: X= ${this.marker.x / 64} Y= ${this.marker.y}`);
             }, this);
 
             this.game.input.onDown.add(() => {
@@ -55,9 +60,21 @@ module Game {
             this.cursors = this.game.input.keyboard.createCursorKeys();
         }
 
+        createDoctors() {
+            for (let y = 1; y < 7; y++) {
+                let doctor = this.enemiesGroup.create(11 * 64, y * 64, "enemy1");
+                doctor.anchor.setTo(0.5, 0.5);
+                doctor.body.setSize(64, 64, 32, 0);
+                doctor.animations.add('walk');
+                doctor.animations.play('walk', 15, true);
+                doctor.body.velocity.x = -10;
+            }
+        }
+
         addTowerToTile() {
             var x = this.layer.getTileX(this.game.input.activePointer.worldX) * 64;
             var y = this.layer.getTileX(this.game.input.activePointer.worldY) * 64;
+            console.log(`X= ${x / 64} Y= ${y / 64}`);
             var tile = this.map.getTile(x, y, this.layer);
             let towerOnTile = this.towerOnTile(x, y);
             if (!towerOnTile) {
@@ -82,6 +99,16 @@ module Game {
             for (var i = 0; i < this.towerList.length; i++) {
                 this.towerList[i].sprite.body.velocity.x = 0;
                 this.towerList[i].shoot();
+                this.game.physics.arcade.overlap(this.towerList[i].weapon.bullets, this.enemiesGroup, this.collisionHandler, null, this);
+            }
+        }
+
+        collisionHandler(bullet, enemy) {
+            // Check enemy and bullet are on the same Y axis
+            if (Math.floor(enemy.world.y / 64) === Math.floor(bullet.world.y / 64)) {
+                bullet.kill();
+                enemy.animations.play('enemy1death', 15, true);
+                enemy.kill();
             }
         }
 
