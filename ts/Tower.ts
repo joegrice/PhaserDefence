@@ -7,11 +7,11 @@ module Models {
         weapon: Phaser.Weapon;
         lastShotAt: number = 0;
 
-        constructor(game: Phaser.Game, x: number, y: number, towerGroup: Phaser.Group, bullets: Phaser.Group) {
+        constructor(game: Phaser.Game, x: number, y: number, sprite: Phaser.Sprite, towerGroup: Phaser.Group, bullets: Phaser.Group) {
             this.game = game;
             this.xPos = x;
             this.yPos = y;
-            this.sprite = this.game.add.sprite(x, y, "tower");
+            this.sprite = sprite;
             towerGroup.add(this.sprite);
 
             //  Creates 30 bullets, using the 'bullet' graphic

@@ -4,19 +4,15 @@ module Enemy {
             super(game);
             this.key = "enemy1";
             this.loadTexture("enemy1");
+            this.scale.x = 0.75;        
+            this.scale.y = 0.75;        
             this.animations.add('walk');
-            this.animations.play('walk', 15, true);
-            //let deathAnim = this.animations.add('enemy1death');
-            //deathAnim.onComplete.add(this.death, this);
-            /*this.animations.add('walk', Phaser.Animation.generateFrameNames('enemy01_walk_', 1, 15, '.png'), 20, true);
-            this.animations.play('walk', 15, true);
-            let deathAnim = this.animations.add('death', Phaser.Animation.generateFrameNames('enemy01_death_', 1, 22, '.png'), 20, true);
-            deathAnim.onComplete.add(this.death, this);*/   
+            this.animations.play('walk', 20, true);   
         }
 
         spawn(x, y) {
             this.stdReset(x, y);
-            this.body.velocity.x = -10;
+            this.body.velocity.x = -25;
         }
 
         hit(bullet: Phaser.Bullet) {

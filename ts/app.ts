@@ -8,8 +8,9 @@ module Game {
             let tileSize = 64;
             this.game = new Phaser.Game(widthTiles * tileSize, heightTiles * tileSize, Phaser.AUTO, 'content');
 
+            this.game.state.add("MenuState", Game.MenuState, false);
             this.game.state.add("GameRunningState", Game.GameRunningState, false);
-            this.game.state.start("GameRunningState");
+            this.game.state.start("MenuState");
         }
     }
 }
