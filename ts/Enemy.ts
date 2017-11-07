@@ -16,7 +16,6 @@ module Enemy {
             this.dying = false;
             this.healthVal = 10;
             this.moneyValue = 10;
-            this.damage(8);
         }
 
         stdReset(x, y) {
