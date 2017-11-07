@@ -102,7 +102,9 @@ module Game {
                 let previousTile = this.getTileOnMap(sprite.input.dragStartPoint.x, sprite.input.dragStartPoint.y);
                 this.setUpDraggableTower(previousTile.x, previousTile.y, sprite.key);
             } else {
-                sprite.position = sprite.input.dragStartPoint;
+                sprite.kill();
+                let previousTile = this.getTileOnMap(sprite.input.dragStartPoint.x, sprite.input.dragStartPoint.y);
+                this.setUpDraggableTower(previousTile.x, previousTile.y, sprite.key);
             }
         }
 
