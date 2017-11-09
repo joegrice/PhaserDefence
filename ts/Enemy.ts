@@ -10,6 +10,7 @@ module Enemy {
 
         constructor(game) {
             super(game, 0, 0);
+            this.exists = false;
             this.anchor.setTo(0.5, 0.5);
             this.game.physics.enable(this);
             this.body.setSize(64, 64);            
