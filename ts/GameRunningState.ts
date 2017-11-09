@@ -49,7 +49,6 @@ module Game {
             // Group
             this.towerList = new Array<Models.Tower>();
             this.towers = this.game.add.physicsGroup(Phaser.Physics.ARCADE, this.game.world, "towers");
-<<<<<<< HEAD
             this.smallBullets = this.game.add.physicsGroup(Phaser.Physics.ARCADE, this.game.world, "smallBullets");
             this.smallBullets.classType = Models.SmallTowerBullet;
             this.smallBullets.createMultiple(50, "smallbullet");
@@ -60,9 +59,6 @@ module Game {
             this.bigBullets.createMultiple(50, "bigbullet");
             this.bigBullets.setAll('outOfBoundsKill', true);
             this.bigBullets.setAll('checkWorldBounds', true);
-=======
-            this.bullets = this.game.add.physicsGroup(Phaser.Physics.ARCADE, this.game.world, "bullets");
->>>>>>> 4bd2658355bf35dd81f275cc6d996bba039ad8d7
 
             // Marker
             this.marker = this.game.add.graphics();
@@ -115,11 +111,7 @@ module Game {
             let towerOnTile = this.towerOnTile(tile);
             if (!towerOnTile) {
                 sprite.input.draggable = false;
-<<<<<<< HEAD
                 this.towerList.push(this.getTowerObject(this.game, tile.worldX, tile.worldY, sprite, this.towers));
-=======
-                this.towerList.push(this.getTowerObject(this.game, tile.worldX, tile.worldY, sprite, this.towers, this.bullets));
->>>>>>> 4bd2658355bf35dd81f275cc6d996bba039ad8d7
                 let previousTile = this.getTileOnMap(sprite.input.dragStartPoint.x, sprite.input.dragStartPoint.y);
                 this.setUpDraggableTower(previousTile.x, previousTile.y, sprite.key);
             } else {
@@ -129,7 +121,6 @@ module Game {
             }
         }
 
-<<<<<<< HEAD
         getTowerObject(game: Phaser.Game, x: number, y: number, sprite: Phaser.Sprite, towerGroup: Phaser.Group) {
             switch (sprite.key.toString()) {
                 case "redtower":
@@ -140,18 +131,6 @@ module Game {
                     return new Models.SmallGreenTower(game, x, y, sprite, towerGroup, this.smallBullets);
                 case "smallyellowtower":
                     return new Models.SmallYellowTower(game, x, y, sprite, towerGroup, this.smallBullets);
-=======
-        getTowerObject(game: Phaser.Game, x: number, y: number, sprite: Phaser.Sprite, towerGroup: Phaser.Group, bullets: Phaser.Group) {
-            switch (sprite.key.toString()) {
-                case "redtower":
-                    return new Models.RedTower(game, x, y, sprite, towerGroup, bullets);
-                case "greentower":
-                    return new Models.GreenTower(game, x, y, sprite, towerGroup, bullets);
-                case "smallgreentower":
-                    return new Models.SmallGreenTower(game, x, y, sprite, towerGroup, bullets);
-                case "smallyellowtower":
-                    return new Models.SmallYellowTower(game, x, y, sprite, towerGroup, bullets);
->>>>>>> 4bd2658355bf35dd81f275cc6d996bba039ad8d7
             }
         }
 
@@ -180,12 +159,8 @@ module Game {
                 this.towerList[i].sprite.body.velocity.x = 0;
                 this.towerList[i].fire();
             }
-<<<<<<< HEAD
             this.game.physics.arcade.overlap(this.smallBullets, this.enemiesGroup, this.bulletEnemyCollisionHandler, null, this);
             this.game.physics.arcade.overlap(this.bigBullets, this.enemiesGroup, this.bulletEnemyCollisionHandler, null, this);
-=======
-            this.game.physics.arcade.overlap(this.bullets, this.enemiesGroup, this.bulletEnemyCollisionHandler, null, this);
->>>>>>> 4bd2658355bf35dd81f275cc6d996bba039ad8d7
             this.game.physics.arcade.overlap(this.towers, this.enemiesGroup, this.towerEnemyCollisionHandler, null, this);
         }
 
