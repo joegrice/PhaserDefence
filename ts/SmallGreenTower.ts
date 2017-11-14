@@ -1,14 +1,8 @@
 module Models {
     export class SmallGreenTower extends Tower {
         
-        bullets: Phaser.Group;
-        firingTimer: number;
-        
-        constructor(game: Phaser.Game, x: number, y: number, sprite: Phaser.Sprite, towerGroup: Phaser.Group, bullets: Phaser.Group) {
-            super(game, x, y, sprite, towerGroup, bullets);
-
-            this.firingTimer = 0;
-            this.bullets = bullets;
+        constructor(game: Phaser.Game, sprite: Phaser.Sprite, towerGroup: Phaser.Group, bullets: Phaser.Group) {
+            super(game, sprite, towerGroup, bullets);
         }
 
         fire() {

@@ -1,15 +1,12 @@
 module Models {
     export class SmallYellowTower extends Tower{
-        bullets: Phaser.Group;
-        firingTimer: number;
+        
         firstFire: boolean;
 
-        constructor(game: Phaser.Game, x: number, y: number, sprite: Phaser.Sprite, towerGroup: Phaser.Group, bullets: Phaser.Group) {
-            super(game, x, y, sprite, towerGroup, bullets);
+        constructor(game: Phaser.Game, sprite: Phaser.Sprite, towerGroup: Phaser.Group, bullets: Phaser.Group) {
+            super(game, sprite, towerGroup, bullets);
 
             this.firstFire = false;
-            this.firingTimer = 0;
-            this.bullets = bullets;
         }
 
         fire() {

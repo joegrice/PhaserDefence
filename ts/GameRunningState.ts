@@ -84,11 +84,11 @@ module Game {
         }
 
         setUpDraggableTower(x, y, spriteName) {
-            let redTower = this.createTowerSpriteAtTile(x, y, spriteName);
-            redTower.inputEnabled = true;
-            redTower.input.enableSnap(64, 64, false, true);            
-            redTower.input.enableDrag();
-            redTower.events.onDragStop.add(this.towerOnDragStop, this);
+            let tower = this.createTowerSpriteAtTile(x, y, spriteName);
+            tower.inputEnabled = true;
+            tower.input.enableSnap(64, 64, false, true);            
+            tower.input.enableDrag();
+            tower.events.onDragStop.add(this.towerOnDragStop, this);
         }
 
         createTowerSpriteAtTile(x, y, spriteName): Phaser.Sprite {
@@ -107,30 +107,32 @@ module Game {
         }
 
         towerOnDragStop(sprite: Phaser.Sprite, event) {
-            let tile = this.getTileOnMap(this.game.input.activePointer.worldX, this.game.input.activePointer.worldY);
+            let tile = this.getTileOnMap(this.game.input.activePointer.x, this.game.input.activePointer.y);
             let towerOnTile = this.towerOnTile(tile);
             if (!towerOnTile) {
                 sprite.input.draggable = false;
-                this.towerList.push(this.getTowerObject(this.game, tile.worldX, tile.worldY, sprite, this.towers));
+                sprite.x = tile.x * 64;
+                sprite.y = tile.y * 64;
+                this.towerList.push(this.getTowerObject(this.game, sprite, this.towers));
                 let previousTile = this.getTileOnMap(sprite.input.dragStartPoint.x, sprite.input.dragStartPoint.y);
                 this.setUpDraggableTower(previousTile.x, previousTile.y, sprite.key);
             } else {
                 sprite.kill();
                 let previousTile = this.getTileOnMap(sprite.input.dragStartPoint.x, sprite.input.dragStartPoint.y);
                 this.setUpDraggableTower(previousTile.x, previousTile.y, sprite.key);
-            }
+            }            
         }
 
-        getTowerObject(game: Phaser.Game, x: number, y: number, sprite: Phaser.Sprite, towerGroup: Phaser.Group) {
+        getTowerObject(game: Phaser.Game, sprite: Phaser.Sprite, towerGroup: Phaser.Group) {
             switch (sprite.key.toString()) {
                 case "redtower":
-                    return new Models.RedTower(game, x, y, sprite, towerGroup, this.bigBullets);
+                    return new Models.RedTower(game, sprite, towerGroup, this.bigBullets);
                 case "greentower":
-                    return new Models.GreenTower(game, x, y, sprite, towerGroup, this.bigBullets);
+                    return new Models.GreenTower(game, sprite, towerGroup, this.bigBullets);
                 case "smallgreentower":
-                    return new Models.SmallGreenTower(game, x, y, sprite, towerGroup, this.smallBullets);
+                    return new Models.SmallGreenTower(game, sprite, towerGroup, this.smallBullets);
                 case "smallyellowtower":
-                    return new Models.SmallYellowTower(game, x, y, sprite, towerGroup, this.smallBullets);
+                    return new Models.SmallYellowTower(game, sprite, towerGroup, this.smallBullets);
             }
         }
 
@@ -156,8 +158,7 @@ module Game {
 
         update() {
             for (var i = 0; i < this.towerList.length; i++) {
-                this.towerList[i].sprite.body.velocity.x = 0;
-                this.towerList[i].fire();
+                this.towerList[i].update();
             }
             this.game.physics.arcade.overlap(this.smallBullets, this.enemiesGroup, this.bulletEnemyCollisionHandler, null, this);
             this.game.physics.arcade.overlap(this.bigBullets, this.enemiesGroup, this.bulletEnemyCollisionHandler, null, this);
