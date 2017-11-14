@@ -157,9 +157,6 @@ module Game {
         }
 
         update() {
-            for (var i = 0; i < this.towerList.length; i++) {
-                this.towerList[i].update();
-            }
             this.game.physics.arcade.overlap(this.smallBullets, this.enemiesGroup, this.bulletEnemyCollisionHandler, null, this);
             this.game.physics.arcade.overlap(this.bigBullets, this.enemiesGroup, this.bulletEnemyCollisionHandler, null, this);
             this.game.physics.arcade.overlap(this.towers, this.enemiesGroup, this.towerEnemyCollisionHandler, null, this);
