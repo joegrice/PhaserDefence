@@ -6,8 +6,10 @@ module Models {
             this.key = "smallyellowtower";
             this.loadTexture("smallyellowtower");
 
-            this.game.time.events.loop(Phaser.Timer.SECOND * 3, this.fire, this);            
-            this.game.time.events.loop(Phaser.Timer.SECOND * 3.5, this.fire, this);
+            let loop1 = this.game.time.events.loop(Phaser.Timer.SECOND * 3, this.fire, this);  
+            this.fireLoops.push(loop1);            
+            let loop2 = this.game.time.events.loop(Phaser.Timer.SECOND * 3.5, this.fire, this);
+            this.fireLoops.push(loop2);            
         }
     }
 }

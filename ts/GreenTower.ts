@@ -6,7 +6,8 @@ module Models {
             this.key = "greentower";
             this.loadTexture("greentower");
 
-            this.game.time.events.loop(Phaser.Timer.SECOND * 4, this.fire, this);
+            let loop = this.game.time.events.loop(Phaser.Timer.SECOND * 4, this.fire, this);
+            this.fireLoops.push(loop);            
         }
     }
 }

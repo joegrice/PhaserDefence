@@ -3,6 +3,7 @@ module Models {
 
         bullets: Phaser.Group;
         healthVal: number;
+        fireLoops: Phaser.TimerEvent[];
 
         constructor(game: Phaser.Game, x: number, y: number, bullets: Phaser.Group) {
             super(game, 0, 0);
@@ -11,6 +12,7 @@ module Models {
             this.body.velocity.x = 0;            
             this.bullets = bullets;
             this.healthVal = 10;
+            this.fireLoops = [];            
             this.reset(x, y);
         }
 
@@ -20,6 +22,10 @@ module Models {
             if (this.healthVal < 1) {
                 //this.animations.play("enemy1death", 22, true);
                 this.kill();
+                this.parent.removeChild(this);
+                this.fireLoops.forEach(loop => {
+                    this.game.time.events.remove(loop);
+                });
             }
         }
 
