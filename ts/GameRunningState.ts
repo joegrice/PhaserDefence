@@ -12,7 +12,6 @@ module Game {
         smallBullets: Phaser.Group;
         bigBullets: Phaser.Group;
         weapon: Phaser.Weapon;
-        towerList: Array<Models.Tower>;
         enemiesGroup: Phaser.Group;
         bulletTime: number;
         money: number;
@@ -28,6 +27,7 @@ module Game {
             this.game.load.image("smallyellowtower", "assets/smallyellowtower.png");
             this.game.load.image("smallbullet", "assets/smallbullet.png");
             this.game.load.image("bigbullet", "assets/bigbullet.png");
+            this.game.load.image("apple_prop", "assets/apple_prop.png");
             this.game.load.atlasJSONArray("enemy1", "assets/enemy1.png", "assets/enemy1.json");
         }
 
@@ -47,8 +47,8 @@ module Game {
             this.setUpTowerBar();
 
             // Group
-            this.towerList = new Array<Models.Tower>();
             this.towers = this.game.add.physicsGroup(Phaser.Physics.ARCADE, this.game.world, "towers");
+            this.towers.classType = Models.Tower;
             this.smallBullets = this.game.add.physicsGroup(Phaser.Physics.ARCADE, this.game.world, "smallBullets");
             this.smallBullets.classType = Models.SmallTowerBullet;
             this.smallBullets.createMultiple(50, "smallbullet");
@@ -67,6 +67,7 @@ module Game {
 
             // Enemeies
             this.enemiesGroup = this.game.add.physicsGroup(Phaser.Physics.ARCADE, this.game.world, "enemies");
+            this.smallBullets.classType = Enemy.Enemy;
             this.createDoctors();
 
             // Callbacks
@@ -86,7 +87,7 @@ module Game {
         setUpDraggableTower(x, y, spriteName) {
             let tower = this.createTowerSpriteAtTile(x, y, spriteName);
             tower.inputEnabled = true;
-            tower.input.enableSnap(64, 64, false, true);            
+            tower.input.enableSnap(64, 64, false, true);
             tower.input.enableDrag();
             tower.events.onDragStop.add(this.towerOnDragStop, this);
         }
@@ -111,28 +112,29 @@ module Game {
             let towerOnTile = this.towerOnTile(tile);
             if (!towerOnTile) {
                 sprite.input.draggable = false;
-                sprite.x = tile.x * 64;
-                sprite.y = tile.y * 64;
-                this.towerList.push(this.getTowerObject(this.game, sprite, this.towers));
-                let previousTile = this.getTileOnMap(sprite.input.dragStartPoint.x, sprite.input.dragStartPoint.y);
-                this.setUpDraggableTower(previousTile.x, previousTile.y, sprite.key);
+                this.towers.add(this.getTowerObject(this.game, sprite, tile.x * 64, tile.y * 64));
+                this.placeTowerBackOnBar(sprite);                
             } else {
-                sprite.kill();
-                let previousTile = this.getTileOnMap(sprite.input.dragStartPoint.x, sprite.input.dragStartPoint.y);
-                this.setUpDraggableTower(previousTile.x, previousTile.y, sprite.key);
-            }            
+                this.placeTowerBackOnBar(sprite);
+            }
         }
 
-        getTowerObject(game: Phaser.Game, sprite: Phaser.Sprite, towerGroup: Phaser.Group) {
+        placeTowerBackOnBar(sprite: Phaser.Sprite) {
+            let previousTile = this.getTileOnMap(sprite.input.dragStartPoint.x, sprite.input.dragStartPoint.y);
+            this.setUpDraggableTower(previousTile.x, previousTile.y, sprite.key);
+            sprite.kill();
+        }
+
+        getTowerObject(game: Phaser.Game, sprite: Phaser.Sprite, x: number, y: number) {
             switch (sprite.key.toString()) {
                 case "redtower":
-                    return new Models.RedTower(game, sprite, towerGroup, this.bigBullets);
+                    return new Models.RedTower(game, x, y, this.bigBullets);
                 case "greentower":
-                    return new Models.GreenTower(game, sprite, towerGroup, this.bigBullets);
+                    return new Models.GreenTower(game, x, y, this.bigBullets);
                 case "smallgreentower":
-                    return new Models.SmallGreenTower(game, sprite, towerGroup, this.smallBullets);
+                    return new Models.SmallGreenTower(game, x, y, this.smallBullets);
                 case "smallyellowtower":
-                    return new Models.SmallYellowTower(game, sprite, towerGroup, this.smallBullets);
+                    return new Models.SmallYellowTower(game, x, y, this.smallBullets);
             }
         }
 
@@ -144,10 +146,10 @@ module Game {
 
         towerOnTile(tile: Phaser.Tile) {
             let towerOnTile = false;
-            if (this.towerList != null && this.towerList.length > 0) {
-                for (let i = 0; i < this.towerList.length; i++) {
-                    var towerListTile = this.getTileOnMap(this.towerList[i].xPos, this.towerList[i].yPos)
-                    if (towerListTile.x === tile.x && towerListTile.y === tile.y) {
+            if (this.towers != null && this.towers.length > 0) {
+                for (let i = 0; i < this.towers.length; i++) {
+                    var towersTile = this.getTileOnMap(this.towers.getChildAt(i).x, this.towers.getChildAt(i).y)
+                    if (towersTile.x === tile.x && towersTile.y === tile.y) {
                         towerOnTile = true;
                         break;
                     }
@@ -162,21 +164,22 @@ module Game {
             this.game.physics.arcade.overlap(this.towers, this.enemiesGroup, this.towerEnemyCollisionHandler, null, this);
         }
 
-        bulletEnemyCollisionHandler(bullet, enemy) {
+        bulletEnemyCollisionHandler(bullet: Models.TowerBullet, enemy: Enemy.Enemy) {
             // Check enemy and bullet are on the same Y axis
             let bullety = this.layer.getTileY(bullet.world.y);
             let enemyy = this.layer.getTileY(enemy.world.y);
             if (bullety === enemyy) {
-                enemy.hit(bullet);
+                enemy.hitBullet(bullet);
                 this.updateMoney(enemy.moneyValue);
             }
         }
 
         towerEnemyCollisionHandler(tower, enemy) {
-            let towery = this.layer.getTileY(tower.world.y);
-            let enemyy = this.layer.getTileY(enemy.world.y);
+            let towery = this.layer.getTileY(tower.y);
+            let enemyy = this.layer.getTileY(enemy.y);
             if (towery === enemyy) {
-                console.log("Tower hit.")
+                enemy.hitTower(tower);
+                tower.hitEnemy(enemy);
             }
         }
 

@@ -16,22 +16,5 @@ module Enemy {
             this.stdReset(x, y);
             this.body.velocity.x = -25;
         }
-
-        hit(bullet: Models.TowerBullet) {
-            if (this.dying) {
-                return;
-            }
-
-            bullet.kill();
-            this.healthVal -= bullet.attackDamage;          
-
-            if (this.healthVal < 1) {
-                this.dying = true;
-                this.body.velocity = 0;
-                //this.animations.play("enemy1death", 22, true);
-                this.death();
-            }
-
-        }
     }
 }
