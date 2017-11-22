@@ -26,6 +26,8 @@ module Game {
             this.layer = this.map.createLayer("Tile Layer 1");
             this.wallLayer = this.map.createLayer("wall");
             this.layer.resizeWorld();
+            this.game.physics.arcade.enable(this.wallLayer);
+            this.map.setCollisionBetween(0, 10000, true, this.wallLayer);
 
             // UI
             this.money = 0;
@@ -67,7 +69,7 @@ module Game {
 
         setUpTowerBar() {
             this.layout.towerBar.forEach(towerSetup => {
-                this.setUpDraggableTower(towerSetup.position.x, towerSetup.position.y, towerSetup.name);            
+                this.setUpDraggableTower(towerSetup.position.x, towerSetup.position.y, towerSetup.name);
             });
         }
 
@@ -100,7 +102,7 @@ module Game {
             if (!towerOnTile) {
                 sprite.input.draggable = false;
                 this.towers.add(this.getTowerObject(this.game, sprite, tile.x * 64, tile.y * 64));
-                this.placeTowerBackOnBar(sprite);                
+                this.placeTowerBackOnBar(sprite);
             } else {
                 this.placeTowerBackOnBar(sprite);
             }
@@ -149,6 +151,7 @@ module Game {
             this.game.physics.arcade.overlap(this.smallBullets, this.enemiesGroup, this.bulletEnemyCollisionHandler, null, this);
             this.game.physics.arcade.overlap(this.bigBullets, this.enemiesGroup, this.bulletEnemyCollisionHandler, null, this);
             this.game.physics.arcade.overlap(this.towers, this.enemiesGroup, this.towerEnemyCollisionHandler, null, this);
+            this.game.physics.arcade.collide(this.wallLayer, this.enemiesGroup, this.wallEnemyCollisionHandler, null, this);
         }
 
         bulletEnemyCollisionHandler(bullet: Models.TowerBullet, enemy: Enemy.Enemy) {
@@ -159,6 +162,10 @@ module Game {
                 enemy.hitBullet(bullet);
                 this.updateMoney(enemy.moneyValue);
             }
+        }
+
+        wallEnemyCollisionHandler(wall, enemy) {
+            this.game.state.start('GameOverState');            
         }
 
         towerEnemyCollisionHandler(tower, enemy) {

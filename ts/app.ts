@@ -11,6 +11,7 @@ module Game {
             this.game.state.add("BootState", Game.BootState, false);
             this.game.state.add("PreloadState", Game.PreloadState, false);
             this.game.state.add("GameState", Game.GameState, false);
+            this.game.state.add("GameOverState", Game.GameOverState, false);
             this.game.state.start("BootState");
         }
     }
