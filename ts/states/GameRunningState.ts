@@ -1,9 +1,8 @@
 module Game {
-    export class GameRunningState extends Phaser.State {
+    export class GameState extends Phaser.State {
         constructor() {
             super();
         }
-        game: Phaser.Game;
         map: Phaser.Tilemap;
         marker: Phaser.Graphics;
         layer: Phaser.TilemapLayer;
@@ -11,24 +10,12 @@ module Game {
         towers: Phaser.Group;
         smallBullets: Phaser.Group;
         bigBullets: Phaser.Group;
-        weapon: Phaser.Weapon;
         enemiesGroup: Phaser.Group;
-        bulletTime: number;
         money: number;
         moneyText: Phaser.Text;
+        layout: Models.Layout;
 
         preload() {
-            this.game.load.tilemap("map", "assets/map.json", null, Phaser.Tilemap.TILED_JSON);
-            this.game.load.image("tile2map64", "assets/tile2map64.png");
-            this.game.load.image("towerDefense_tilesheet", "assets/towerDefense_tilesheet.png");
-            this.game.load.image("redtower", "assets/redtower.png");
-            this.game.load.image("greentower", "assets/greentower.png");
-            this.game.load.image("smallgreentower", "assets/smallgreentower.png");
-            this.game.load.image("smallyellowtower", "assets/smallyellowtower.png");
-            this.game.load.image("smallbullet", "assets/smallbullet.png");
-            this.game.load.image("bigbullet", "assets/bigbullet.png");
-            this.game.load.image("apple_prop", "assets/apple_prop.png");
-            this.game.load.atlasJSONArray("enemy1", "assets/enemy1.png", "assets/enemy1.json");
         }
 
         create() {
@@ -44,6 +31,7 @@ module Game {
             this.money = 0;
             this.moneyText = this.game.add.text(32, 24, "Money: " + this.money);
             this.moneyText.fontSize = 16;
+            this.layout = JSON.parse(this.game.cache.getText('layout'));
             this.setUpTowerBar();
 
             // Group
@@ -78,10 +66,9 @@ module Game {
         }
 
         setUpTowerBar() {
-            this.setUpDraggableTower(3, 7, "redtower");
-            this.setUpDraggableTower(4, 7, "greentower");
-            this.setUpDraggableTower(5, 7, "smallyellowtower");
-            this.setUpDraggableTower(6, 7, "smallgreentower");
+            this.layout.towerBar.forEach(towerSetup => {
+                this.setUpDraggableTower(towerSetup.position.x, towerSetup.position.y, towerSetup.name);            
+            });
         }
 
         setUpDraggableTower(x, y, spriteName) {

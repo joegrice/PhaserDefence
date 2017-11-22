@@ -1,5 +1,5 @@
 module Game {
-    export class MenuState extends Phaser.State {
+    export class BootState extends Phaser.State {
         constructor() {
             super();
         }
@@ -16,7 +16,7 @@ module Game {
         }
         
         start() {
-            this.game.state.start('GameRunningState')
+            this.game.state.start('PreloadState')
         }
     }
 }
