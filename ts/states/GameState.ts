@@ -14,6 +14,8 @@ module Game {
         money: number;
         moneyText: Phaser.Text;
         layout: Models.Layout;
+        enemiesNum: number;
+        levelNum: number;
 
         preload() {
         }
@@ -35,6 +37,7 @@ module Game {
             this.moneyText.fontSize = 16;
             this.layout = JSON.parse(this.game.cache.getText('layout'));
             this.setUpTowerBar();
+            this.levelNum = 0;
 
             // Group
             this.towers = this.game.add.physicsGroup(Phaser.Physics.ARCADE, this.game.world, "towers");
@@ -58,13 +61,16 @@ module Game {
             // Enemeies
             this.enemiesGroup = this.game.add.physicsGroup(Phaser.Physics.ARCADE, this.game.world, "enemies");
             this.smallBullets.classType = Enemy.Enemy;
-            this.createDoctors();
+            this.enemiesNum = 0;
 
             // Callbacks
             this.game.input.addMoveCallback((pointer: Phaser.Pointer, x: number, y: number) => {
                 this.marker.x = this.layer.getTileX(x) * 64;
                 this.marker.y = this.layer.getTileY(y) * 64;
             }, this);
+
+            // Level
+            this.updateLevel();
         }
 
         setUpTowerBar() {
@@ -85,13 +91,15 @@ module Game {
             return this.game.add.sprite(x * 64, y * 64, spriteName);
         }
 
-        createDoctors() {
+        createDoctors(randomMax: number) {
+            this.enemiesGroup.removeAll();
             for (let y = 1; y < 7; y++) {
-                let rand = Math.floor((Math.random() * 10) + 1);
+                let rand = Math.floor((Math.random() * randomMax) + 1);
                 for (let z = 0; z < rand; z++) {
                     this.enemiesGroup.add(new Enemy.Doctor(this.game));
                     let doc = this.enemiesGroup.getFirstExists(false);
-                    doc.spawn((11 * 64) + z * (rand * 15), (y * 64) + doc.body.height / 4);
+                    doc.spawn((14 * 64) + z * (rand * 15), (y * 64) + doc.body.height / 4);
+                    this.enemiesNum++;
                 }
             }
         }
@@ -147,11 +155,25 @@ module Game {
             return towerOnTile;
         }
 
+        updateLevel() {
+            this.levelNum++;
+            let levelText = "Level: " + this.levelNum;
+            var playText = this.game.add.text(this.game.width / 2, 250, levelText, { font: "50px Arial", fill: "#ffffff" });
+            playText.anchor.x = Math.round(playText.width * 0.5) / playText.width;
+            this.game.add.tween(playText).to({ alpha: 0 }, 2000, Phaser.Easing.Linear.None, true, 0, 0, false);
+
+            this.createDoctors(this.levelNum);
+        }
+
         update() {
             this.game.physics.arcade.overlap(this.smallBullets, this.enemiesGroup, this.bulletEnemyCollisionHandler, null, this);
             this.game.physics.arcade.overlap(this.bigBullets, this.enemiesGroup, this.bulletEnemyCollisionHandler, null, this);
             this.game.physics.arcade.overlap(this.towers, this.enemiesGroup, this.towerEnemyCollisionHandler, null, this);
             this.game.physics.arcade.collide(this.wallLayer, this.enemiesGroup, this.wallEnemyCollisionHandler, null, this);
+
+            if (this.enemiesNum === 0) {
+                this.updateLevel();
+            }
         }
 
         bulletEnemyCollisionHandler(bullet: Models.TowerBullet, enemy: Enemy.Enemy) {
@@ -161,11 +183,12 @@ module Game {
             if (bullety === enemyy) {
                 enemy.hitBullet(bullet);
                 this.updateMoney(enemy.moneyValue);
+                this.enemiesNum--;
             }
         }
 
         wallEnemyCollisionHandler(wall, enemy) {
-            this.game.state.start('GameOverState');            
+            this.game.state.start('GameOverState');
         }
 
         towerEnemyCollisionHandler(tower, enemy) {
