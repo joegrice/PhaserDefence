@@ -107,7 +107,8 @@ module Game {
         towerOnDragStop(sprite: Phaser.Sprite, event) {
             let tile = this.getTileOnMap(this.game.input.activePointer.x, this.game.input.activePointer.y);
             let towerOnTile = this.towerOnTile(tile);
-            if (!towerOnTile) {
+            let isPositionForbidden = this.isPositionForbidden(tile.x, tile.y);
+            if (!towerOnTile && !isPositionForbidden) {
                 sprite.input.draggable = false;
                 this.towers.add(this.getTowerObject(this.game, sprite, tile.x * 64, tile.y * 64));
                 this.placeTowerBackOnBar(sprite);
@@ -153,6 +154,16 @@ module Game {
                 }
             }
             return towerOnTile;
+        }
+
+        isPositionForbidden(x: number, y: number) {
+            let isForbidden = false;
+            this.layout.forbiddenTiles.forEach(mapPos => {
+                if (x === mapPos.x && y === mapPos.y) {
+                    isForbidden = true;
+                }
+            })
+            return isForbidden;
         }
 
         updateLevel() {
