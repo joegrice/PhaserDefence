@@ -15,11 +15,15 @@ module Game {
             this.game.load.image("smallbullet", "assets/smallbullet.png");
             this.game.load.image("bigbullet", "assets/bigbullet.png");
             this.game.load.image("apple_prop", "assets/apple_prop.png");
+            this.game.load.image("shopbuybtn", "assets/shopbuybtn.png");
+            this.game.load.image("shopitembg", "assets/shopitembg.png");
+            this.game.load.image("returntogamebtn", "assets/returntogamebtn.png");
             this.game.load.text("layout", "assets/data/layout.json");
             this.game.load.atlasJSONArray("enemy1", "assets/enemy1.png", "assets/enemy1.json");
         }
 
         create() {
+            Models.Stats.resetStats();            
             this.game.state.start('GameState');
         }
     }

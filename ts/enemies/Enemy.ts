@@ -55,6 +55,7 @@ module Enemy {
         death() {
             this.particleBurst();
             this.kill();
+            this.parent.removeChild(this);            
         }
 
         particleBurst() {

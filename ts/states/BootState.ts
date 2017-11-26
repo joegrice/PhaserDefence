@@ -16,7 +16,7 @@ module Game {
         }
         
         start() {
-            this.game.state.start('PreloadState')
+            this.game.state.start('PreloadState');
         }
     }
 }

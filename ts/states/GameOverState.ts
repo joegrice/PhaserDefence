@@ -19,7 +19,7 @@ module Game {
         }
         
         start() {
-            this.game.state.start('BootState')
+            this.game.state.start('BootState');
         }
     }
 }
