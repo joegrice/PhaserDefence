@@ -1,7 +1,7 @@
 class Stats {
-    static resetStats() {
+    static resetStats(): void {
         GameStats.level = 1;
-        GameStats.money = 0;
+        GameStats.money = 80;
         SmallTowerBulletStats.damage = 5;
         BigTowerBulletStats.damage = 7;
         RedTowerStats.healthVal = 10;
@@ -16,7 +16,7 @@ class Stats {
 }
 class GameStats {
     static level = 1;
-    static money = 0;
+    static money = 80;
 }
 class SmallTowerBulletStats {
     static damage = 5;

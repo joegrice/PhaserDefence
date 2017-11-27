@@ -11,7 +11,7 @@ class Doctor extends Enemy {
         this.healthVal = 10;
     }
 
-    spawn(x: number, y: number) {
+    spawn(x: number, y: number): void {
         this.stdReset(x, y);
         this.body.velocity.x = -25;
     }

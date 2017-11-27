@@ -1,9 +1,9 @@
 class GameMain extends Phaser.Game {
 
     constructor() {
-        let widthTiles = 12;
-        let heightTiles = 8;
-        let tileSize = 64;
+        let widthTiles: number = 12;
+        let heightTiles: number = 8;
+        let tileSize: number = 64;
         super(widthTiles * tileSize, heightTiles * tileSize, Phaser.AUTO, "content");
 
         this.state.add("BootState", BootState, false);
@@ -16,5 +16,5 @@ class GameMain extends Phaser.Game {
 }
 
 window.onload = () => {
-    var game = new GameMain();
+    var game: GameMain = new GameMain();
 };

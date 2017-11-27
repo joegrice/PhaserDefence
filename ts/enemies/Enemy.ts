@@ -14,7 +14,7 @@ class Enemy extends Phaser.Sprite {
         this.body.setSize(64, 64);
         this.dying = false;
         this.healthVal = 10;
-        this.moneyValue = 10;
+        this.moneyValue = 2;
         this.attackDamage = 5;
 
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -23,12 +23,12 @@ class Enemy extends Phaser.Sprite {
         this.emitter.makeParticles("apple_prop");
     }
 
-    stdReset(x: number, y: number) {
+    stdReset(x: number, y: number): void {
         this.reset(x, y);
         this.dying = false;
     }
 
-    hitBullet(bullet: TowerBullet) {
+    hitBullet(bullet: TowerBullet): void {
         if (this.dying) {
             return;
         }
@@ -39,29 +39,28 @@ class Enemy extends Phaser.Sprite {
         if (this.healthVal < 1) {
             this.dying = true;
             this.body.velocity = 0;
-            // this.animations.play("enemy1death", 22, true);
             this.death();
         }
     }
 
-    hitTower(tower: Tower) {
+    hitTower(tower: Tower): void {
         this.death();
     }
 
-    death() {
+    death(): void {
         this.particleBurst();
         this.kill();
         this.parent.removeChild(this);
     }
 
-    particleBurst() {
+    particleBurst(): void {
         this.emitter.x = this.x;
         this.emitter.y = this.y;
         this.emitter.start(true, 1000, null, 5);
         this.game.time.events.add(Phaser.Timer.SECOND * 2, this.destroyEmitter, this);
     }
 
-    destroyEmitter() {
+    destroyEmitter(): void {
         this.emitter.destroy();
     }
 }

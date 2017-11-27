@@ -5,12 +5,15 @@ class SmallYellowTower extends Tower {
         this.key = "smallyellowtower";
         this.loadTexture("smallyellowtower");
 
+        this.price = 20;
         this.healthVal = SmallYellowTowerStats.healthVal;
         this.bulletSpeed = SmallYellowTowerStats.bulletSpeed;
+    }
 
-        let fireEvent1 = this.game.time.events.loop(Phaser.Timer.SECOND * 3, this.fire, this);
+    startFiring(): void {
+        let fireEvent1: Phaser.TimerEvent = this.game.time.events.loop(Phaser.Timer.SECOND * 3, this.fire, this);
         this.fireLoops.push(fireEvent1);
-        let fireEvent2 = this.game.time.events.loop(Phaser.Timer.SECOND * 3.5, this.fire, this);
+        let fireEvent2: Phaser.TimerEvent = this.game.time.events.loop(Phaser.Timer.SECOND * 3.5, this.fire, this);
         this.fireLoops.push(fireEvent2);
     }
 }

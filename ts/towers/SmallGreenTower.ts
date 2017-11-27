@@ -7,8 +7,10 @@ class SmallGreenTower extends Tower {
 
         this.healthVal = SmallGreenTowerStats.healthVal;
         this.bulletSpeed = SmallGreenTowerStats.bulletSpeed;
+    }
 
-        let fireEvent = this.game.time.events.loop(Phaser.Timer.SECOND * 3, this.fire, this);
+    startFiring(): void {
+        let fireEvent: Phaser.TimerEvent = this.game.time.events.loop(Phaser.Timer.SECOND * 3, this.fire, this);
         this.fireLoops.push(fireEvent);
     }
 }
