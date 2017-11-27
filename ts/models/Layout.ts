@@ -1,16 +1,14 @@
-module Models {
-    export class Layout {
-        towerBar: TowerSetup[];
-        forbiddenTiles: MapPosition[];
-    }
+class Layout {
+    towerBar: TowerSetup[];
+    forbiddenTiles: MapPosition[];
+}
 
-    export class TowerSetup {
-        name: string;
-        position: MapPosition;
-    }
+class TowerSetup {
+    name: string;
+    position: MapPosition;
+}
 
-    export class MapPosition {
-        x: number;
-        y: number;
-    }
+class MapPosition {
+    x: number;
+    y: number;
 }
