@@ -5,6 +5,7 @@ class Enemy extends Phaser.Sprite {
     healthVal: number;
     attackDamage: number;
     emitter: Phaser.Particles.Arcade.Emitter;
+    finalEnemy: boolean;
 
     constructor(game: Phaser.Game) {
         super(game, 0, 0);
@@ -50,6 +51,11 @@ class Enemy extends Phaser.Sprite {
     death(): void {
         this.particleBurst();
         this.kill();
+        if(this.parent.children.length === 1) {
+            this.parent.removeChild(this);
+            this.game.state.start("ShopState", true, false);
+            return;
+        }
         this.parent.removeChild(this);
     }
 

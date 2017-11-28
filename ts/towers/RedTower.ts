@@ -6,8 +6,8 @@ class RedTower extends Tower {
         this.loadTexture("redtower");
 
         this.price = 20;
-        this.healthVal = RedTowerStats.healthVal;
-        this.bulletSpeed = RedTowerStats.bulletSpeed;
+        this.healthVal = GlobalState.RedTowerState.healthVal;
+        this.bulletSpeed = GlobalState.RedTowerState.bulletSpeed;
     }
 
     startFiring(): void {

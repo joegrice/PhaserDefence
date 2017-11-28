@@ -5,8 +5,8 @@ class SmallGreenTower extends Tower {
         this.key = "smallgreentower";
         this.loadTexture("smallgreentower");
 
-        this.healthVal = SmallGreenTowerStats.healthVal;
-        this.bulletSpeed = SmallGreenTowerStats.bulletSpeed;
+        this.healthVal = GlobalState.SmallGreenTowerState.healthVal;
+        this.bulletSpeed = GlobalState.SmallGreenTowerState.bulletSpeed;
     }
 
     startFiring(): void {

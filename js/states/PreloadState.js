@@ -20,7 +20,7 @@ class PreloadState extends Phaser.State {
         this.game.load.atlasJSONArray("enemy1", "assets/enemy1.png", "assets/enemy1.json");
     }
     create() {
-        Stats.resetStats();
+        GlobalState.resetStats();
         this.game.state.start("GameState");
     }
 }

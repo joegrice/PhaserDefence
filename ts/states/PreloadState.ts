@@ -3,7 +3,7 @@ class PreloadState extends Phaser.State {
         super();
     }
 
-    preload() {
+    preload(): void {
         this.game.load.tilemap("map", "assets/map.json", null, Phaser.Tilemap.TILED_JSON);
         this.game.load.image("tile2map64", "assets/tile2map64.png");
         this.game.load.image("towerDefense_tilesheet", "assets/towerDefense_tilesheet.png");
@@ -21,8 +21,8 @@ class PreloadState extends Phaser.State {
         this.game.load.atlasJSONArray("enemy1", "assets/enemy1.png", "assets/enemy1.json");
     }
 
-    create() {
-        Stats.resetStats();
+    create(): void {
+        GlobalState.resetStats();
         this.game.state.start("GameState");
     }
 }

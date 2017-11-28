@@ -5,6 +5,6 @@ class BigTowerBullet extends TowerBullet {
         this.key = "bigbullet";
         this.loadTexture("bigbullet");
         this.exists = false;
-        this.attackDamage = BigTowerBulletStats.damage;
+        this.attackDamage = GlobalState.BigTowerBulletState.damage;
     }
 }

@@ -6,8 +6,8 @@ class SmallYellowTower extends Tower {
         this.loadTexture("smallyellowtower");
 
         this.price = 20;
-        this.healthVal = SmallYellowTowerStats.healthVal;
-        this.bulletSpeed = SmallYellowTowerStats.bulletSpeed;
+        this.healthVal = GlobalState.SmallYellowTowerState.healthVal;
+        this.bulletSpeed = GlobalState.SmallYellowTowerState.bulletSpeed;
     }
 
     startFiring(): void {

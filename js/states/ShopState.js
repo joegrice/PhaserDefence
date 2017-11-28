@@ -3,28 +3,22 @@ class ShopState extends Phaser.State {
         super();
     }
     create() {
-        let towers = [
-            { name: "redtower", type: RedTowerStats },
-            { name: "greentower", type: GreenTowerStats },
-            { name: "smallgreentower", type: SmallGreenTowerStats },
-            { name: "smallyellowtower", type: SmallYellowTowerStats }
-        ];
         var titleText = this.game.add.text(this.game.world.centerX, 80, "UPGRADE BULLET SPEED", { font: "50px Arial", fill: "#ffffff" });
         titleText.anchor.x = Math.round(titleText.width * 0.5) / titleText.width;
-        var moneyText = this.game.add.text(this.game.world.centerX, 150, "Money: " + GameStats.money, { font: "25px Arial", fill: "#ffffff" });
+        var moneyText = this.game.add.text(this.game.world.centerX, 150, "Money: " + GlobalState.money, { font: "25px Arial", fill: "#ffffff" });
         moneyText.anchor.x = Math.round(titleText.width * 0.5) / titleText.width;
         var errorText = this.game.add.text(50, 435, "Error: Not enough money.", { font: "25px Arial", fill: "#ffffff" });
         errorText.visible = false;
-        for (let i = 0; i < towers.length; i++) {
-            let btn = this.setUpShopItem((i + 1) * 150, towers[i].name);
+        for (let i = 0; i < GlobalState.towers.length; i++) {
+            let btn = this.setUpShopItem((i + 1) * 150, GlobalState.towers[i].key);
             btn.events.onInputDown.add(() => {
-                if (GameStats.money >= 50) {
-                    towers[i].type.bulletSpeed += 50;
-                    GameStats.money -= 50;
-                    moneyText.text = "Money: " + GameStats.money;
+                if (GlobalState.money >= 25) {
+                    GlobalState.towers[i].bulletSpeed += 50;
+                    GlobalState.money -= 25;
+                    moneyText.text = "Money: " + GlobalState.money;
                 }
                 else {
-                    errorText.text = "Error: Not enough money, item costs: 50";
+                    errorText.text = "Error: Not enough money, item costs: 25";
                     errorText.visible = true;
                 }
             }, this);
@@ -45,7 +39,7 @@ class ShopState extends Phaser.State {
         return item1buybtn;
     }
     returnToGame() {
-        GameStats.level++;
+        GlobalState.level++;
         this.game.state.start("GameState", true, false);
     }
 }

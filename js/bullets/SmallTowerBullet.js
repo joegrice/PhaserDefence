@@ -4,7 +4,7 @@ class SmallTowerBullet extends TowerBullet {
         this.key = "smallbullet";
         this.loadTexture("smallbullet");
         this.exists = false;
-        this.attackDamage = SmallTowerBulletStats.damage;
+        this.attackDamage = GlobalState.SmallTowerBulletState.damage;
     }
 }
 //# sourceMappingURL=SmallTowerBullet.js.map

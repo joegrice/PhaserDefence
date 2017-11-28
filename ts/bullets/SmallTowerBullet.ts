@@ -6,6 +6,6 @@ class SmallTowerBullet extends TowerBullet {
         this.loadTexture("smallbullet");
         this.exists = false;
 
-        this.attackDamage = SmallTowerBulletStats.damage;
+        this.attackDamage = GlobalState.SmallTowerBulletState.damage;
     }
 }

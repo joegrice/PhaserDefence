@@ -3,8 +3,8 @@ class SmallGreenTower extends Tower {
         super(game, x, y, bullets);
         this.key = "smallgreentower";
         this.loadTexture("smallgreentower");
-        this.healthVal = SmallGreenTowerStats.healthVal;
-        this.bulletSpeed = SmallGreenTowerStats.bulletSpeed;
+        this.healthVal = GlobalState.SmallGreenTowerState.healthVal;
+        this.bulletSpeed = GlobalState.SmallGreenTowerState.bulletSpeed;
     }
     startFiring() {
         let fireEvent = this.game.time.events.loop(Phaser.Timer.SECOND * 3, this.fire, this);
