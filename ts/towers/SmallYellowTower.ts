@@ -1,7 +1,7 @@
 class SmallYellowTower extends Tower {
 
-    constructor(game: Phaser.Game, x: number, y: number, bullets: Phaser.Group) {
-        super(game, x, y, bullets);
+    constructor(gameState: GameState, x: number, y: number) {
+        super(gameState, x, y);
         this.key = "smallyellowtower";
         this.loadTexture("smallyellowtower");
 
@@ -10,10 +10,8 @@ class SmallYellowTower extends Tower {
         this.bulletSpeed = GlobalState.SmallYellowTowerState.bulletSpeed;
     }
 
-    startFiring(): void {
-        let fireEvent1: Phaser.TimerEvent = this.game.time.events.loop(Phaser.Timer.SECOND * 3, this.fire, this);
-        this.fireLoops.push(fireEvent1);
-        let fireEvent2: Phaser.TimerEvent = this.game.time.events.loop(Phaser.Timer.SECOND * 3.5, this.fire, this);
-        this.fireLoops.push(fireEvent2);
+    addFireEvent(): void {
+        this.fireTimer.loop(Phaser.Timer.SECOND * 3, () => { this.fire(this.gameState.smallBullets); }, this);
+        this.fireTimer.loop(Phaser.Timer.SECOND * 3.5, () => { this.fire(this.gameState.smallBullets); }, this);
     }
 }

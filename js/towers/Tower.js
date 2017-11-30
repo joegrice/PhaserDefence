@@ -1,15 +1,16 @@
 class Tower extends Phaser.Sprite {
-    constructor(game, x, y, bullets) {
-        super(game, x, y);
+    constructor(gameState, x, y) {
+        super(gameState.game, x, y);
         this.game.physics.enable(this);
+        this.gameState = gameState;
         this.body.velocity.x = 0;
         this.inputEnabled = true;
         this.input.enableSnap(64, 64, false, true);
         this.input.enableDrag(true, true);
-        this.bullets = bullets;
         this.healthVal = 10;
         this.price = 15;
-        this.fireLoops = [];
+        this.fireTimer = this.game.time.create(false);
+        this.fireTimer.start();
     }
     place(x, y) {
         this.input.draggable = false;
@@ -28,18 +29,29 @@ class Tower extends Phaser.Sprite {
         this.clearFireEvents();
     }
     clearFireEvents() {
-        this.fireLoops.forEach(loop => {
-            this.game.time.events.remove(loop);
-        });
+        this.fireTimer.removeAll();
     }
-    startFiring() {
-        let fireEvent = this.game.time.events.loop(Phaser.Timer.SECOND * 4, this.fire, this);
-        this.fireLoops.push(fireEvent);
+    addFireEvent() {
+        this.fireTimer.loop(Phaser.Timer.SECOND * 4, () => { this.fire(this.gameState.smallBullets); }, this);
     }
-    fire() {
-        let bullet = this.bullets.getFirstExists(false);
-        bullet.reset(this.x, this.y);
-        this.game.physics.arcade.moveToXY(bullet, this.x + 10, this.y, this.bulletSpeed);
+    enemyOnRow() {
+        let enemyOnRow = false;
+        this.gameState.enemiesGroup.forEach((enemy) => {
+            let towerY = this.gameState.layer.getTileY(this.world.y);
+            let enemyY = this.gameState.layer.getTileY(enemy.world.y);
+            if (towerY === enemyY && enemy.x < this.game.width) {
+                enemyOnRow = true;
+                return enemyOnRow;
+            }
+        }, this);
+        return enemyOnRow;
+    }
+    fire(bullets) {
+        if (this.enemyOnRow()) {
+            let bullet = bullets.getFirstExists(false);
+            bullet.reset(this.x, this.y);
+            this.game.physics.arcade.moveToXY(bullet, this.x + 10, this.y, this.bulletSpeed);
+        }
     }
 }
 //# sourceMappingURL=Tower.js.map

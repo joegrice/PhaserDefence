@@ -1,7 +1,7 @@
 class GreenTower extends Tower {
 
-    constructor(game: Phaser.Game, x: number, y: number, bullets: Phaser.Group) {
-        super(game, x, y, bullets);
+    constructor(gameState: GameState, x: number, y: number) {
+        super(gameState, x, y);
         this.key = "greentower";
         this.loadTexture("greentower");
 
@@ -9,8 +9,7 @@ class GreenTower extends Tower {
         this.bulletSpeed = GlobalState.GreenTowerState.bulletSpeed;
     }
 
-    startFiring(): void {
-        let fireEvent: Phaser.TimerEvent = this.game.time.events.loop(Phaser.Timer.SECOND * 4, this.fire, this);
-        this.fireLoops.push(fireEvent);
+    addFireEvent(): void {
+        this.fireTimer.loop(Phaser.Timer.SECOND * 4, () => { this.fire(this.gameState.bigBullets); }, this);
     }
 }

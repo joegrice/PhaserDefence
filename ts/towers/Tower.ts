@@ -1,22 +1,23 @@
 class Tower extends Phaser.Sprite {
 
-    bullets: Phaser.Group;
     healthVal: number;
-    fireLoops: Phaser.TimerEvent[];
     bulletSpeed: number;
     price: number;
+    gameState: GameState;
+    fireTimer: Phaser.Timer;
 
-    constructor(game: Phaser.Game, x: number, y: number, bullets: Phaser.Group) {
-        super(game, x, y);
+    constructor(gameState: GameState, x: number, y: number) {
+        super(gameState.game, x, y);
         this.game.physics.enable(this);
+        this.gameState = gameState;
         this.body.velocity.x = 0;
         this.inputEnabled = true;
         this.input.enableSnap(64, 64, false, true);
         this.input.enableDrag(true, true);
-        this.bullets = bullets;
         this.healthVal = 10;
         this.price = 15;
-        this.fireLoops = [];
+        this.fireTimer = this.game.time.create(false);
+        this.fireTimer.start();
     }
 
     place(x: number, y: number): void {
@@ -39,19 +40,31 @@ class Tower extends Phaser.Sprite {
     }
 
     clearFireEvents(): void {
-        this.fireLoops.forEach(loop => {
-            this.game.time.events.remove(loop);
-        });
+        this.fireTimer.removeAll();
     }
 
-    startFiring(): void {
-        let fireEvent: Phaser.TimerEvent = this.game.time.events.loop(Phaser.Timer.SECOND * 4, this.fire, this);
-        this.fireLoops.push(fireEvent);
+    addFireEvent(): void {
+        this.fireTimer.loop(Phaser.Timer.SECOND * 4, () => { this.fire(this.gameState.smallBullets); }, this);
     }
 
-    fire(): void {
-        let bullet: TowerBullet = this.bullets.getFirstExists(false);
-        bullet.reset(this.x, this.y);
-        this.game.physics.arcade.moveToXY(bullet, this.x + 10, this.y, this.bulletSpeed);
+    enemyOnRow(): boolean {
+        let enemyOnRow: boolean = false;
+        this.gameState.enemiesGroup.forEach((enemy: Enemy) => {
+            let towerY: number = this.gameState.layer.getTileY(this.world.y);
+            let enemyY: number = this.gameState.layer.getTileY(enemy.world.y);
+            if (towerY === enemyY && enemy.x < this.game.width) {
+                enemyOnRow = true;
+                return enemyOnRow;
+            }
+        }, this);
+        return enemyOnRow;
+    }
+
+    fire(bullets: Phaser.Group): void {
+        if (this.enemyOnRow()) {
+            let bullet: TowerBullet = bullets.getFirstExists(false);
+            bullet.reset(this.x, this.y);
+            this.game.physics.arcade.moveToXY(bullet, this.x + 10, this.y, this.bulletSpeed);
+        }
     }
 }

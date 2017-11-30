@@ -1,14 +1,13 @@
 class GreenTower extends Tower {
-    constructor(game, x, y, bullets) {
-        super(game, x, y, bullets);
+    constructor(gameState, x, y) {
+        super(gameState, x, y);
         this.key = "greentower";
         this.loadTexture("greentower");
         this.healthVal = GlobalState.GreenTowerState.healthVal;
         this.bulletSpeed = GlobalState.GreenTowerState.bulletSpeed;
     }
-    startFiring() {
-        let fireEvent = this.game.time.events.loop(Phaser.Timer.SECOND * 4, this.fire, this);
-        this.fireLoops.push(fireEvent);
+    addFireEvent() {
+        this.fireTimer.loop(Phaser.Timer.SECOND * 4, () => { this.fire(this.gameState.bigBullets); }, this);
     }
 }
 //# sourceMappingURL=GreenTower.js.map

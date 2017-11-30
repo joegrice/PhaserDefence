@@ -73,7 +73,7 @@ class GameState extends Phaser.State {
         let canAffordTower = this.canAffordTower(tower);
         if (!towerOnTile && !isPositionForbidden && canAffordTower) {
             tower.reset(tile.x * 64, tile.y * 64);
-            tower.startFiring();
+            tower.addFireEvent();
             this.towers.add(tower);
             this.placeTowerBackOnBar(tower);
             this.subtractMoney(tower.price);
@@ -96,15 +96,7 @@ class GameState extends Phaser.State {
     }
     getTowerObject(game, spriteName, x, y) {
         let tower = GlobalState.towers.find(tower => tower.key === spriteName);
-        return new tower.type(game, x, y, this.getBulletGroupForTower(spriteName));
-    }
-    getBulletGroupForTower(spriteName) {
-        if (spriteName.toLowerCase().includes("small")) {
-            return this.smallBullets;
-        }
-        else {
-            return this.bigBullets;
-        }
+        return new tower.type(this, x, y);
     }
     getTileOnMap(x, y) {
         var tileX = this.layer.getTileX(x);
