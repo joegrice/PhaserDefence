@@ -1,3 +1,0 @@
-interface ITowerBulletState {
-    damage: number;
-}

@@ -7,7 +7,7 @@ class Doctor extends Enemy {
         this.scale.y = 0.75;
         this.animations.add("walk");
         this.animations.play("walk", 20, true);
-        this.healthVal = 10;
+        this.healthValue = 10;
     }
     spawn(x, y) {
         this.stdReset(x, y);

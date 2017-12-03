@@ -2,6 +2,7 @@ class GlobalState {
     static resetStats() {
         GlobalState.level = 1;
         GlobalState.money = 0;
+        GlobalState.score = 0;
         GlobalState.BigTowerBulletState.damage = 7;
         GlobalState.SmallTowerBulletState.damage = 5;
         GlobalState.RedTowerState.healthVal = 10;
@@ -16,6 +17,7 @@ class GlobalState {
 }
 GlobalState.level = 1;
 GlobalState.money = 0;
+GlobalState.score = 0;
 GlobalState.SmallTowerBulletState = {
     damage: 5
 };

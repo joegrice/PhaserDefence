@@ -15,6 +15,8 @@ class GameState extends Phaser.State {
         // ui
         this.moneyText = this.game.add.text(32, 24, "Money: " + GlobalState.money);
         this.moneyText.fontSize = 16;
+        this.scoreText = this.game.add.text(160, 24, "Score: " + GlobalState.score);
+        this.scoreText.fontSize = 16;
         this.layout = JSON.parse(this.game.cache.getText("layout"));
         // group
         this.towers = this.game.add.physicsGroup(Phaser.Physics.ARCADE, this.game.world, "towers");
@@ -156,6 +158,7 @@ class GameState extends Phaser.State {
         if (bulletY === enemyY) {
             enemy.hitBullet(bullet);
             this.addMoney(enemy.moneyValue);
+            this.addScore(enemy.scoreValue);
         }
     }
     wallEnemyCollisionHandler(enemy, wall) {
@@ -176,6 +179,10 @@ class GameState extends Phaser.State {
     subtractMoney(amount) {
         GlobalState.money -= amount;
         this.moneyText.text = "Money: " + GlobalState.money;
+    }
+    addScore(amount) {
+        GlobalState.score += amount;
+        this.scoreText.text = "Score: " + GlobalState.score;
     }
 }
 //# sourceMappingURL=GameState.js.map

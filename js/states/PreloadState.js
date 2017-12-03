@@ -17,11 +17,12 @@ class PreloadState extends Phaser.State {
         this.game.load.image("shopitembg", "assets/shopitembg.png");
         this.game.load.image("returntogamebtn", "assets/returntogamebtn.png");
         this.game.load.text("layout", "assets/data/layout.json");
+        this.game.load.text("highscores", "assets/data/highscores.json");
         this.game.load.atlasJSONArray("enemy1", "assets/enemy1.png", "assets/enemy1.json");
     }
     create() {
         GlobalState.resetStats();
-        this.game.state.start("GameState");
+        this.game.state.start("GameOverState");
     }
 }
 //# sourceMappingURL=PreloadState.js.map
