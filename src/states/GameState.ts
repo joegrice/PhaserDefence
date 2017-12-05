@@ -8,6 +8,7 @@ import BigTowerBullet from "../bullets/BigTowerBullet";
 import SmallTowerBullet from "../bullets/SmallTowerBullet";
 import TowerBullet from "../bullets/TowerBullet";
 import ITowerState from "../models/ITowerState";
+import { TileHelper } from "../helpers/TileHelper";
 
 export class GameState extends Phaser.State {
 
@@ -96,7 +97,7 @@ export class GameState extends Phaser.State {
         for (let y: number = 1; y < 7; y++) {
             let rand: number = Math.floor((Math.random() * randomMax) + 1);
             for (let z: number = 0; z < rand; z++) {
-                this.enemiesGroup.add(new Doctor(this.game));
+                this.enemiesGroup.add(new Doctor(this));
                 let doc: Doctor = this.enemiesGroup.getFirstExists(false);
                 doc.spawn((14 * 64) + z * (rand * 15), (y * 64) + doc.body.height / 4);
             }
@@ -104,9 +105,10 @@ export class GameState extends Phaser.State {
     }
 
     towerOnDragStop(tower: Tower, event: Phaser.Pointer): void {
-        let tile: Phaser.Tile = this.getTileOnMap(this.game.input.activePointer.x, this.game.input.activePointer.y);
+        let tile: Phaser.Tile = TileHelper.getTileOnMap(this.game.input.activePointer.x, this.game.input.activePointer.y,
+            this.layer, this.map);
         let towerOnTile: boolean = this.towerOnTile(tile);
-        let isPositionForbidden: boolean = this.isPositionForbidden(tile.x, tile.y);
+        let isPositionForbidden: boolean = TileHelper.isPositionForbidden(tile.x, tile.y, this);
         let canAffordTower: boolean = this.canAffordTower(tower);
         if (!towerOnTile && !isPositionForbidden && canAffordTower) {
             tower.reset(tile.x * 64, tile.y * 64);
@@ -129,7 +131,8 @@ export class GameState extends Phaser.State {
     }
 
     placeTowerBackOnBar(sprite: Phaser.Sprite): void {
-        let previousTile: Phaser.Tile = this.getTileOnMap(sprite.input.dragStartPoint.x, sprite.input.dragStartPoint.y);
+        let previousTile: Phaser.Tile = TileHelper.getTileOnMap(sprite.input.dragStartPoint.x, sprite.input.dragStartPoint.y,
+            this.layer, this.map);
         this.setUpDraggableTower(previousTile.x, previousTile.y, sprite.key.toString());
     }
 
@@ -138,17 +141,12 @@ export class GameState extends Phaser.State {
         return new tower.type(this, x, y);
     }
 
-    getTileOnMap(x: number, y: number): Phaser.Tile {
-        var tileX: number = this.layer.getTileX(x);
-        var tileY: number = this.layer.getTileY(y);
-        return this.map.getTile(tileX, tileY, this.layer);
-    }
-
     towerOnTile(tile: Phaser.Tile): boolean {
         let towerOnTile: boolean = false;
         if (this.towers != null && this.towers.length > 0) {
             for (let i: number = 0; i < this.towers.length; i++) {
-                var towersTile: Phaser.Tile = this.getTileOnMap(this.towers.getChildAt(i).x, this.towers.getChildAt(i).y);
+                var towersTile: Phaser.Tile = TileHelper.getTileOnMap(this.towers.getChildAt(i).x, this.towers.getChildAt(i).y,
+                    this.layer, this.map);
                 if (towersTile.x === tile.x && towersTile.y === tile.y) {
                     towerOnTile = true;
                     break;
@@ -156,16 +154,6 @@ export class GameState extends Phaser.State {
             }
         }
         return towerOnTile;
-    }
-
-    isPositionForbidden(x: number, y: number): boolean {
-        let isForbidden: boolean = false;
-        this.layout.forbiddenTiles.forEach(mapPos => {
-            if (x === mapPos.x && y === mapPos.y) {
-                isForbidden = true;
-            }
-        });
-        return isForbidden;
     }
 
     displayError(text: string): void {
@@ -198,10 +186,7 @@ export class GameState extends Phaser.State {
     }
 
     bulletEnemyCollisionHandler(bullet: TowerBullet, enemy: Enemy): void {
-        // check enemy and bullet are on the same Y axis
-        let bulletY: number = this.layer.getTileY(bullet.world.y);
-        let enemyY: number = this.layer.getTileY(enemy.world.y);
-        if (bulletY === enemyY) {
+        if (TileHelper.onSameRow(bullet.world.y, enemy.world.y, this.layer)) {
             enemy.hitBullet(bullet);
             this.addMoney(enemy.moneyValue);
             this.addScore(enemy.scoreValue);
@@ -213,9 +198,7 @@ export class GameState extends Phaser.State {
     }
 
     towerEnemyCollisionHandler(tower: Tower, enemy: Enemy): void {
-        let towerY: number = this.layer.getTileY(tower.y);
-        let enemyY: number = this.layer.getTileY(enemy.y);
-        if (towerY === enemyY) {
+        if (TileHelper.onSameRow(tower.y, enemy.y, this.layer)) {
             enemy.hitTower(tower);
             tower.hitEnemy(enemy);
         }

@@ -1,9 +1,11 @@
 import * as Phaser from "phaser-ce";
 import Tower from "../towers/Tower";
 import TowerBullet from "../bullets/TowerBullet";
+import GameState from "../states/GameState";
 
 export class Enemy extends Phaser.Sprite {
 
+    gameState: GameState;
     dying: boolean;
     moneyValue: number;
     scoreValue: number;
@@ -13,8 +15,9 @@ export class Enemy extends Phaser.Sprite {
     finalEnemy: boolean;
     movementSpeed: number;
 
-    constructor(game: Phaser.Game) {
-        super(game, 0, 0);
+    constructor(gameState: GameState) {
+        super(gameState.game, 0, 0);
+        this.gameState = gameState;
         this.exists = false;
         this.anchor.setTo(0.5, 0.5);
         this.game.physics.enable(this);
@@ -28,7 +31,7 @@ export class Enemy extends Phaser.Sprite {
 
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
         this.game.stage.backgroundColor = 0x337799;
-        this.emitter = game.add.emitter(0, 0, 100);
+        this.emitter = gameState.game.add.emitter(0, 0, 100);
         this.emitter.makeParticles("apple_prop");
     }
 
@@ -60,7 +63,7 @@ export class Enemy extends Phaser.Sprite {
     death(): void {
         this.particleBurst();
         this.kill();
-        if(this.parent.children.length === 1) {
+        if (this.parent.children.length === 1) {
             this.parent.removeChild(this);
             this.game.state.start("ShopState", true, false);
             return;

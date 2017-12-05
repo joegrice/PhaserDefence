@@ -37,20 +37,7 @@ export class GameOverState extends Phaser.State {
         pkey.onDown.addOnce(this.start, this);
     }
 
-    /*createScoreArray(): Score[] {
-        let scores: Score[] = new Array<Score>();
-        this.highscores.scores.forEach(score => {
-            let newScore: Score = new Score();
-            newScore.name = score.name;
-            newScore.score = score.score;
-            scores.push(newScore);
-        });
-        return scores;
-    }*/
-
     updateHighScore(): void {
-        // let arr: Score[] = this.createScoreArray();
-        // let arr: Score[] = Object.keys(this.scores).map((name, score) => [name, score]);
         let sortedScores: Score[] = this.highscores.scores.sort((a: Score, b: Score) => {
             return b.score - a.score;
         });
