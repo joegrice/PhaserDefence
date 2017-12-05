@@ -22,7 +22,10 @@ export class PreloadState extends Phaser.State {
         this.game.load.image("returntogamebtn", "assets/returntogamebtn.png");
         this.game.load.text("layout", "assets/data/layout.json");
         this.game.load.text("highscores", "assets/data/highscores.json");
-        this.game.load.atlasJSONArray("enemy1", "assets/enemy1.png", "assets/enemy1.json");
+        this.game.load.atlasJSONArray("headDoctor", "assets/headDoctor.png", "assets/headDoctor.json");
+        this.game.load.spritesheet("enemyWomanDoctor", "assets/enemyWomanDoctor.png", 67, 94, 16);
+        this.game.load.spritesheet("afroDoctor", "assets/afroDoctor.png", 68, 100, 15);
+        this.game.load.spritesheet("flyingDoctor", "assets/flyingDoctor.png", 68, 94, 18);
     }
 
     create(): void {

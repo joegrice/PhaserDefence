@@ -3,12 +3,16 @@ import { Layout } from "../models/Layout";
 import GlobalState from "../models/GlobalState";
 import Tower from "../towers/Tower";
 import Enemy from "../enemies/Enemy";
-import Doctor from "../enemies/Doctor";
+import HeadDoctor from "../enemies/HeadDoctor";
 import BigTowerBullet from "../bullets/BigTowerBullet";
 import SmallTowerBullet from "../bullets/SmallTowerBullet";
 import TowerBullet from "../bullets/TowerBullet";
 import ITowerState from "../models/ITowerState";
 import { TileHelper } from "../helpers/TileHelper";
+import { WomanDoctor } from "../enemies/WomanDoctor";
+import { AfroDoctor } from "../enemies/AfroDoctor";
+import { EnemyHelper } from "../helpers/EnemyHelper";
+import { MoneyHelper } from "../helpers/MoneyHelper";
 
 export class GameState extends Phaser.State {
 
@@ -92,18 +96,6 @@ export class GameState extends Phaser.State {
         tower.events.onDragStop.add(this.towerOnDragStop, this);
     }
 
-    createDoctors(randomMax: number): void {
-        this.enemiesGroup.removeAll();
-        for (let y: number = 1; y < 7; y++) {
-            let rand: number = Math.floor((Math.random() * randomMax) + 1);
-            for (let z: number = 0; z < rand; z++) {
-                this.enemiesGroup.add(new Doctor(this));
-                let doc: Doctor = this.enemiesGroup.getFirstExists(false);
-                doc.spawn((14 * 64) + z * (rand * 15), (y * 64) + doc.body.height / 4);
-            }
-        }
-    }
-
     towerOnDragStop(tower: Tower, event: Phaser.Pointer): void {
         let tile: Phaser.Tile = TileHelper.getTileOnMap(this.game.input.activePointer.x, this.game.input.activePointer.y,
             this.layer, this.map);
@@ -115,7 +107,7 @@ export class GameState extends Phaser.State {
             tower.addFireEvent();
             this.towers.add(tower);
             this.placeTowerBackOnBar(tower);
-            this.subtractMoney(tower.price);
+            MoneyHelper.subtractMoney(tower.price, this.moneyText);
         } else {
             this.displayError("Not enough money, item cost: " + tower.price);
             tower.reset(tower.input.dragStartPoint.x, tower.input.dragStartPoint.y);
@@ -169,9 +161,10 @@ export class GameState extends Phaser.State {
         playText.anchor.x = Math.round(playText.width * 0.5) / playText.width;
         this.game.add.tween(playText).to({ alpha: 0 }, 2000, Phaser.Easing.Linear.None, true, 0, 0, false);
 
-        this.addMoney(100);
+        MoneyHelper.addMoney(100, this.moneyText);
         this.clearPlacedTiles();
-        this.createDoctors(GlobalState.level * 5);
+        let enemyHelper: EnemyHelper = new EnemyHelper(this, this.enemiesGroup);
+        enemyHelper.generateEnemies(GlobalState.level + 30);
     }
 
     clearPlacedTiles(): void {
@@ -188,7 +181,6 @@ export class GameState extends Phaser.State {
     bulletEnemyCollisionHandler(bullet: TowerBullet, enemy: Enemy): void {
         if (TileHelper.onSameRow(bullet.world.y, enemy.world.y, this.layer)) {
             enemy.hitBullet(bullet);
-            this.addMoney(enemy.moneyValue);
             this.addScore(enemy.scoreValue);
         }
     }
@@ -202,16 +194,6 @@ export class GameState extends Phaser.State {
             enemy.hitTower(tower);
             tower.hitEnemy(enemy);
         }
-    }
-
-    addMoney(amount: number): void {
-        GlobalState.money += amount;
-        this.moneyText.text = "Money: " + GlobalState.money;
-    }
-
-    subtractMoney(amount: number): void {
-        GlobalState.money -= amount;
-        this.moneyText.text = "Money: " + GlobalState.money;
     }
 
     addScore(amount: number): void {

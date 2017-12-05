@@ -13,6 +13,14 @@ export class TileHelper {
         return onSameRow;
     }
 
+    static spriteOnScreen(sprite: Phaser.Sprite): boolean {
+        let spriteOnScreen: boolean = false;
+        if(sprite.world.x < 768 && sprite.world.y < 448) {
+            spriteOnScreen = true;
+        }
+        return spriteOnScreen;
+    }
+
     static isPositionForbidden(x: number, y: number, gameState: GameState): boolean {
         let isForbidden: boolean = false;
         let layout: Layout = JSON.parse(gameState.game.cache.getText("layout"));
