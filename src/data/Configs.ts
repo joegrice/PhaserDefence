@@ -4,6 +4,7 @@ import { TowerBullet } from "../bullets/TowerBullet";
 import { ITowerBulletConfig } from "../bullets/ITowerBulletConfig";
 import { ITowerConfig } from "../towers/ITowerConfig";
 import { GameState } from "../states/GameState";
+import { EnemyFactory } from "../enemies/EnemyFactory";
 
 export class Configs {
     static level = 1;
@@ -16,7 +17,7 @@ export class Configs {
         moneyValue: 3,
         scoreValue: 3,
         attackDamage: 5,
-        movementSpeed: -30,
+        movementSpeed: -25,
         deathSoundKey: "enemydeath",
         hitSoundKey: "enemyhit",
         specialAbility: {
@@ -31,9 +32,13 @@ export class Configs {
         moneyValue: 4,
         scoreValue: 5,
         attackDamage: 5,
-        movementSpeed: -30,
+        movementSpeed: -20,
         deathSoundKey: "enemydeath",
         hitSoundKey: "enemyhit",
+        specialAbility: {
+            time: Phaser.Timer.SECOND * 3,
+            ability: Configs.speedBoost
+        }
     };
 
     static AfroDoctor: IEnemyConfig = {
@@ -42,20 +47,28 @@ export class Configs {
         moneyValue: 4,
         scoreValue: 5,
         attackDamage: 5,
-        movementSpeed: -25,
+        movementSpeed: -20,
         deathSoundKey: "enemydeath",
         hitSoundKey: "enemyhit",
+        specialAbility: {
+            time: Phaser.Timer.SECOND * 3,
+            ability: Configs.healthBoost
+        }
     };
 
     static FlyingDoctor: IEnemyConfig = {
         spriteKey: "flyingDoctor",
-        healthValue: 30,
+        healthValue: 35,
         moneyValue: 4,
         scoreValue: 5,
         attackDamage: 5,
-        movementSpeed: -25,
+        movementSpeed: -18,
         deathSoundKey: "enemydeath",
         hitSoundKey: "enemyhit",
+        specialAbility: {
+            time: Phaser.Timer.SECOND * 3,
+            ability: Configs.summonEnemy
+        }
     };
 
     static SmallTowerBulletConfig: ITowerBulletConfig = {
@@ -148,22 +161,56 @@ export class Configs {
     }
 
     static dodgeBullet(enemy: Enemy): void {
-        if (!enemy.dying) {
-            let inRange: Array<TowerBullet> = enemy.gameState.bullets.filter(bullet => bullet.exists).list;
-            inRange.forEach((towerBullet: TowerBullet) => {
+        if (!enemy.dying && enemy.gameState.isSpriteOnScreen(enemy)) {
+            enemy.gameState.bullets.forEachExists((towerBullet: TowerBullet) => {
                 if (enemy.gameState.isOnSameRow(towerBullet.world.y, enemy.gameState.world.y, enemy.gameState.layer) &&
-                    enemy.gameState.isSpriteOnScreen(enemy) && (enemy.x - towerBullet.x < 200)) {
+                    (enemy.x - towerBullet.x < 200)) {
                     let rand: number = Math.floor((Math.random() * 3) + 1);
                     if (rand === 2) {
                         let rand: number = Math.floor((Math.random() * 1) + 0);
                         if (rand === 0) {
                             enemy.gameState.moveSpriteDownRow(enemy);
+                            enemy.game.add.tween(enemy).to({ alpha: 0 }, 200, "Linear", true, 0, 3, true);
+                            return;
                         } else {
                             enemy.gameState.moveSpriteUpRow(enemy);
+                            enemy.game.add.tween(enemy).to({ alpha: 0 }, 200, "Linear", true, 0, 3, true);
+                            return;
                         }
                     }
                 }
             });
+        }
+    }
+
+    static summonEnemy(enemy: Enemy): void {
+        if (enemy.gameState.isSpriteOnScreen(enemy)) {
+            let rand: number = Math.floor((Math.random() * 5) + 1);
+            if (rand === 2) {
+                let enemyFactory: EnemyFactory = new EnemyFactory(enemy.gameState, enemy.gameState.enemies);
+                enemyFactory.generateRandomWeakEnemy(enemy.y, enemy.x - 80);
+                enemy.game.add.tween(enemy).to({ alpha: 0 }, 200, "Linear", true, 0, 3, true);
+            }
+        }
+    }
+
+    static speedBoost(enemy: Enemy): void {
+        if (!enemy.dying && enemy.gameState.isSpriteOnScreen(enemy)) {
+            let rand: number = Math.floor((Math.random() * 5) + 1);
+            if (rand === 2) {
+                enemy.movementSpeed -= 5;
+                enemy.game.add.tween(enemy).to({ alpha: 0 }, 200, "Linear", true, 0, 3, true);
+            }
+        }
+    }
+
+    static healthBoost(enemy: Enemy): void {
+        if (!enemy.dying && enemy.gameState.isSpriteOnScreen(enemy)) {
+            let rand: number = Math.floor((Math.random() * 5) + 1);
+            if (rand === 2) {
+                enemy.healthValue += 5;
+                enemy.game.add.tween(enemy).to({ alpha: 0 }, 200, "Linear", true, 0, 3, true);
+            }
         }
     }
 }

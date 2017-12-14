@@ -12,6 +12,7 @@ export class Enemy extends Phaser.Sprite {
     emitter: Phaser.Particles.Arcade.Emitter;
     finalEnemy: boolean;
     eventTimer: Phaser.Timer;
+    movementSpeed: number;
     enemyConfig: IEnemyConfig;
     deathSound: Phaser.Sound;
     hitSound: Phaser.Sound;
@@ -30,6 +31,7 @@ export class Enemy extends Phaser.Sprite {
         this.animations.add("walk");
         this.animations.play("walk", 20, true);
         this.healthValue = enemyConfig.healthValue;
+        this.movementSpeed = enemyConfig.movementSpeed;
 
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
         this.game.stage.backgroundColor = 0x337799;
@@ -63,7 +65,7 @@ export class Enemy extends Phaser.Sprite {
 
         this.hitSound.play();
         this.healthValue -= bullet.attackDamage;
-        this.gameState.bullets.remove(bullet);
+        bullet.kill();
 
         if (this.healthValue < 1) {
             this.death();

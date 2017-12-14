@@ -27,20 +27,20 @@ export class EnemyFactory {
         let random: number = this.getRandomNumber(3, 5);
         maxEnemies -= random;
         for (let i: number = 0; i < random; i++) {
-            this.generateEnemy(y, i);
+            this.generateRandomEnemy(y, i);
         }
     }
 
     generateNumberOfEnemy(y: number, maxEnemies: number): void {
         for (let i: number = 0; i < maxEnemies; i++) {
-            this.generateEnemy(y, i);
+            this.generateRandomEnemy(y, i);
         }
     }
 
-    generateEnemy(y: number, rowPosition: number): void {
+    generateRandomEnemy(y: number, x: number): void {
         let chance: number = this.getRandomNumber(1, 6);
-        let xOffSet: number = this.getRandomNumber(150, 200);
-        let xPixelPos: number = (14 * 64) + (xOffSet * rowPosition);
+        let xOffSet: number = this.getRandomNumber(170, 220);
+        let xPixelPos: number = (14 * 64) + (xOffSet * x);
         let yPixelPos: number = y * 64;
         if (chance <= 3) {
             this.addEnemyToGroup(xPixelPos, yPixelPos, Configs.HeadDoctor);
@@ -50,6 +50,15 @@ export class EnemyFactory {
             this.addEnemyToGroup(xPixelPos, yPixelPos, Configs.AfroDoctor);
         } else if (chance === 6) {
             this.addEnemyToGroup(xPixelPos, yPixelPos, Configs.FlyingDoctor);
+        }
+    }
+
+    generateRandomWeakEnemy(y: number, x: number): void {
+        let chance: number = this.getRandomNumber(1, 5);
+        if (chance <= 3) {
+            this.addEnemyToGroup(x, y, Configs.HeadDoctor);
+        } else if (chance > 3 && chance <= 5) {
+            this.addEnemyToGroup(x, y, Configs.WomanDoctor);
         }
     }
 
