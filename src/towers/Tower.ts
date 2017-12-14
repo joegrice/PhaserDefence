@@ -12,6 +12,8 @@ export class Tower extends Phaser.Sprite {
     gameState: GameState;
     fireTimer: Phaser.Timer;
     towerConfig: ITowerConfig;
+    fireSound: Phaser.Sound;
+    deathSound: Phaser.Sound;
 
     constructor(gameState: GameState, x: number, y: number, towerConfig: ITowerConfig) {
         super(gameState.game, x, y, towerConfig.spriteKey);
@@ -24,6 +26,8 @@ export class Tower extends Phaser.Sprite {
         this.input.enableDrag(true, true);
         this.healthVal = towerConfig.healthVal;
         this.fireTimer = this.game.time.create(false);
+        this.fireSound = this.game.add.audio(towerConfig.bulletConfig.fireSoundKey);
+        this.deathSound = this.game.add.audio(towerConfig.deathSoundKey);
         this.fireTimer.start();
     }
 
@@ -43,7 +47,7 @@ export class Tower extends Phaser.Sprite {
     }
 
     die(): void {
-        // this.animations.play("enemy1death", 22, true);
+        this.deathSound.play();
         this.kill();
         this.parent.removeChild(this);
         this.clearFireEvents();
@@ -77,13 +81,14 @@ export class Tower extends Phaser.Sprite {
             let towerBullet: TowerBullet;
             for (let i: number = 0; i < this.gameState.bullets.children.length; i++) {
                 let foundBullet: TowerBullet = <TowerBullet>this.gameState.bullets.getAt(i);
-                if (foundBullet.key === this.towerConfig.bulletKey && foundBullet.exists === false) {
+                if (foundBullet.key === this.towerConfig.bulletConfig.spriteKey && foundBullet.exists === false) {
                     towerBullet = foundBullet;
                     break;
                 }
             }
             towerBullet.reset(this.x, this.y);
             this.game.physics.arcade.moveToXY(towerBullet, this.gameState.game.width, this.y, this.towerConfig.bulletSpeed);
+            this.fireSound.play();
         }
     }
 }

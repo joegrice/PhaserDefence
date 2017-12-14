@@ -13,6 +13,8 @@ export class Enemy extends Phaser.Sprite {
     finalEnemy: boolean;
     eventTimer: Phaser.Timer;
     enemyConfig: IEnemyConfig;
+    deathSound: Phaser.Sound;
+    hitSound: Phaser.Sound;
 
     constructor(gameState: GameState, enemyConfig: IEnemyConfig) {
         super(gameState.game, 0, 0, enemyConfig.spriteKey);
@@ -33,6 +35,9 @@ export class Enemy extends Phaser.Sprite {
         this.game.stage.backgroundColor = 0x337799;
         this.emitter = gameState.game.add.emitter(0, 0, 100);
         this.emitter.makeParticles("apple_prop");
+
+        this.deathSound = this.game.add.audio(enemyConfig.deathSoundKey);
+        this.hitSound = this.game.add.audio(enemyConfig.hitSoundKey);
 
         this.addSpecialEffect();
     }
@@ -56,6 +61,7 @@ export class Enemy extends Phaser.Sprite {
             return;
         }
 
+        this.hitSound.play();
         this.healthValue -= bullet.attackDamage;
         this.gameState.bullets.remove(bullet);
 
@@ -72,6 +78,7 @@ export class Enemy extends Phaser.Sprite {
         this.dying = true;
         this.body.velocity = 0;
         this.particleBurst();
+        this.deathSound.play();
         this.kill();
         if (this.eventTimer !== undefined) {
             this.eventTimer.removeAll();

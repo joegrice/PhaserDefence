@@ -7,6 +7,8 @@ export interface IEnemyConfig {
     scoreValue: number;
     attackDamage: number;
     movementSpeed: number;
+    deathSoundKey: string;
+    hitSoundKey: string;
     specialAbility?: {
         time: number;
         ability(enemy: Enemy): void;

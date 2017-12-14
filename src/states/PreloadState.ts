@@ -26,6 +26,11 @@ export class PreloadState extends Phaser.State {
         this.game.load.spritesheet("enemyWomanDoctor", "assets/enemyWomanDoctor.png", 67, 94, 16);
         this.game.load.spritesheet("afroDoctor", "assets/afroDoctor.png", 68, 100, 15);
         this.game.load.spritesheet("flyingDoctor", "assets/flyingDoctor.png", 68, 94, 18);
+        this.game.load.audio("enemyhit", "assets/sounds/enemyhit.wav");
+        this.game.load.audio("enemydeath", "assets/sounds/enemydeath.wav");
+        this.game.load.audio("smallbulletfire", "assets/sounds/smallbulletfire.wav");
+        this.game.load.audio("bigbulletfire", "assets/sounds/bigbulletfire.wav");
+        this.game.load.audio("towerdeath", "assets/sounds/towerdeath.wav");
     }
 
     create(): void {

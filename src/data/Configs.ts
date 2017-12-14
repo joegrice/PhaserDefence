@@ -17,6 +17,8 @@ export class Configs {
         scoreValue: 3,
         attackDamage: 5,
         movementSpeed: -30,
+        deathSoundKey: "enemydeath",
+        hitSoundKey: "enemyhit",
         specialAbility: {
             time: Phaser.Timer.SECOND * 0.5,
             ability: Configs.dodgeBullet
@@ -29,7 +31,9 @@ export class Configs {
         moneyValue: 4,
         scoreValue: 5,
         attackDamage: 5,
-        movementSpeed: -30
+        movementSpeed: -30,
+        deathSoundKey: "enemydeath",
+        hitSoundKey: "enemyhit",
     };
 
     static AfroDoctor: IEnemyConfig = {
@@ -38,7 +42,9 @@ export class Configs {
         moneyValue: 4,
         scoreValue: 5,
         attackDamage: 5,
-        movementSpeed: -25
+        movementSpeed: -25,
+        deathSoundKey: "enemydeath",
+        hitSoundKey: "enemyhit",
     };
 
     static FlyingDoctor: IEnemyConfig = {
@@ -47,20 +53,24 @@ export class Configs {
         moneyValue: 4,
         scoreValue: 5,
         attackDamage: 5,
-        movementSpeed: -25
+        movementSpeed: -25,
+        deathSoundKey: "enemydeath",
+        hitSoundKey: "enemyhit",
     };
 
-    static SmallTowerBulletState: ITowerBulletConfig = {
+    static SmallTowerBulletConfig: ITowerBulletConfig = {
         spriteKey: "smallbullet",
+        fireSoundKey: "smallbulletfire",
         attackDamage: 5
     };
 
-    static BigTowerBulletState: ITowerBulletConfig = {
+    static BigTowerBulletConfig: ITowerBulletConfig = {
         spriteKey: "bigbullet",
+        fireSoundKey: "bigbulletfire",
         attackDamage: 7
     };
 
-    static bullets: Array<ITowerBulletConfig> = [Configs.SmallTowerBulletState, Configs.BigTowerBulletState];
+    static bullets: Array<ITowerBulletConfig> = [Configs.SmallTowerBulletConfig, Configs.BigTowerBulletConfig];
 
     static RedTowerState: ITowerConfig = {
         spriteKey: "redtower",
@@ -68,7 +78,8 @@ export class Configs {
         price: 15,
         bulletSpeed: 200,
         fireTimes: [Phaser.Timer.SECOND * 4],
-        bulletKey: Configs.BigTowerBulletState.spriteKey,
+        deathSoundKey: "towerdeath",
+        bulletConfig: Configs.BigTowerBulletConfig,
         barPosition: {
             x: 3,
             y: 7
@@ -81,7 +92,8 @@ export class Configs {
         price: 17,
         bulletSpeed: 200,
         fireTimes: [Phaser.Timer.SECOND * 4],
-        bulletKey: Configs.BigTowerBulletState.spriteKey,
+        deathSoundKey: "towerdeath",
+        bulletConfig: Configs.BigTowerBulletConfig,
         barPosition: {
             x: 4,
             y: 7
@@ -94,7 +106,8 @@ export class Configs {
         price: 15,
         bulletSpeed: 200,
         fireTimes: [Phaser.Timer.SECOND * 3],
-        bulletKey: Configs.SmallTowerBulletState.spriteKey,
+        deathSoundKey: "towerdeath",
+        bulletConfig: Configs.SmallTowerBulletConfig,
         barPosition: {
             x: 5,
             y: 7
@@ -106,8 +119,9 @@ export class Configs {
         healthVal: 10,
         price: 30,
         bulletSpeed: 200,
+        deathSoundKey: "towerdeath",
         fireTimes: [Phaser.Timer.SECOND * 3, Phaser.Timer.SECOND * 3.5],
-        bulletKey: Configs.SmallTowerBulletState.spriteKey,
+        bulletConfig: Configs.SmallTowerBulletConfig,
         barPosition: {
             x: 6,
             y: 7
@@ -121,8 +135,8 @@ export class Configs {
         Configs.level = 1;
         Configs.money = 0;
         Configs.score = 0;
-        Configs.BigTowerBulletState.attackDamage = 7;
-        Configs.SmallTowerBulletState.attackDamage = 5;
+        Configs.BigTowerBulletConfig.attackDamage = 7;
+        Configs.SmallTowerBulletConfig.attackDamage = 5;
         Configs.RedTowerState.healthVal = 10;
         Configs.RedTowerState.bulletSpeed = 200;
         Configs.GreenTowerState.healthVal = 10;

@@ -1,4 +1,5 @@
 import { Tower } from "./Tower";
+import { ITowerBulletConfig } from "../bullets/ITowerBulletConfig";
 
 export interface ITowerConfig {
     spriteKey: string;
@@ -6,7 +7,8 @@ export interface ITowerConfig {
     price: number;
     bulletSpeed: number;
     fireTimes: number[];
-    bulletKey: string;
+    deathSoundKey: string;
+    bulletConfig: ITowerBulletConfig;
     barPosition: {
         x: number;
         y: number;
