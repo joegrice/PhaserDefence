@@ -1,5 +1,5 @@
 import * as Phaser from "phaser-ce";
-import GlobalState from "../models/GlobalState";
+import Configs from "../data/Configs";
 
 export class PreloadState extends Phaser.State {
     constructor() {
@@ -20,8 +20,8 @@ export class PreloadState extends Phaser.State {
         this.game.load.image("shopbuybtn", "assets/shopbuybtn.png");
         this.game.load.image("shopitembg", "assets/shopitembg.png");
         this.game.load.image("returntogamebtn", "assets/returntogamebtn.png");
-        this.game.load.text("layout", "assets/data/layout.json");
-        this.game.load.text("highscores", "assets/data/highscores.json");
+        this.game.load.text("forbiddentiles", "data/forbiddentiles.json");
+        this.game.load.text("highscores", "data/highscores.json");
         this.game.load.atlasJSONArray("headDoctor", "assets/headDoctor.png", "assets/headDoctor.json");
         this.game.load.spritesheet("enemyWomanDoctor", "assets/enemyWomanDoctor.png", 67, 94, 16);
         this.game.load.spritesheet("afroDoctor", "assets/afroDoctor.png", 68, 100, 15);
@@ -29,7 +29,7 @@ export class PreloadState extends Phaser.State {
     }
 
     create(): void {
-        GlobalState.resetStats();
+        Configs.resetStats();
         this.game.state.start("GameState");
     }
 }

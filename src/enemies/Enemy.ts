@@ -2,48 +2,53 @@ import * as Phaser from "phaser-ce";
 import Tower from "../towers/Tower";
 import TowerBullet from "../bullets/TowerBullet";
 import GameState from "../states/GameState";
-import { MoneyHelper } from "../helpers/MoneyHelper";
+import { IEnemyConfig } from "./IEnemyConfig";
 
 export class Enemy extends Phaser.Sprite {
 
     gameState: GameState;
     dying: boolean;
-    moneyValue: number;
-    scoreValue: number;
     healthValue: number;
-    attackDamage: number;
     emitter: Phaser.Particles.Arcade.Emitter;
     finalEnemy: boolean;
-    movementSpeed: number;
     eventTimer: Phaser.Timer;
+    enemyConfig: IEnemyConfig;
 
-    constructor(gameState: GameState) {
-        super(gameState.game, 0, 0);
+    constructor(gameState: GameState, enemyConfig: IEnemyConfig) {
+        super(gameState.game, 0, 0, enemyConfig.spriteKey);
         this.gameState = gameState;
+        this.enemyConfig = enemyConfig;
         this.exists = false;
+        this.dying = false;
         this.anchor.setTo(0.5, 0.5);
         this.game.physics.enable(this);
         this.body.setSize(64, 64);
-        this.dying = false;
-        this.healthValue = 10;
-        this.moneyValue = 3;
-        this.scoreValue = 3;
-        this.attackDamage = 5;
-        this.movementSpeed = -25;
+        this.scale.x = 0.75;
+        this.scale.y = 0.75;
+        this.animations.add("walk");
+        this.animations.play("walk", 20, true);
+        this.healthValue = enemyConfig.healthValue;
 
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
         this.game.stage.backgroundColor = 0x337799;
         this.emitter = gameState.game.add.emitter(0, 0, 100);
         this.emitter.makeParticles("apple_prop");
 
-        this.eventTimer = this.game.time.create(false);
-        this.eventTimer.start();
+        this.addSpecialEffect();
+    }
+
+    addSpecialEffect(): void {
+        if (this.enemyConfig.specialAbility !== undefined) {
+            this.eventTimer = this.game.time.create(false);
+            this.eventTimer.start();
+            this.eventTimer.loop(this.enemyConfig.specialAbility.time, () => { this.enemyConfig.specialAbility.ability(this); }, this);
+        }
     }
 
     spawn(x: number, y: number): void {
         this.reset(x, y);
-        this.dying = false;
-        this.body.velocity.x = this.movementSpeed;
+        this.exists = true;
+        this.body.velocity.x = this.enemyConfig.movementSpeed;
     }
 
     hitBullet(bullet: TowerBullet): void {
@@ -51,8 +56,8 @@ export class Enemy extends Phaser.Sprite {
             return;
         }
 
-        bullet.kill();
         this.healthValue -= bullet.attackDamage;
+        this.gameState.bullets.remove(bullet);
 
         if (this.healthValue < 1) {
             this.death();
@@ -64,12 +69,14 @@ export class Enemy extends Phaser.Sprite {
     }
 
     death(): void {
-        this.body.velocity = 0;
         this.dying = true;
+        this.body.velocity = 0;
         this.particleBurst();
         this.kill();
-        this.eventTimer.removeAll();
-        MoneyHelper.addMoney(this.moneyValue, this.gameState.moneyText);
+        if (this.eventTimer !== undefined) {
+            this.eventTimer.removeAll();
+        }
+        this.gameState.addMoney(this.enemyConfig.moneyValue);
         if (this.parent.children.length === 1) {
             this.parent.removeChild(this);
             this.game.state.start("ShopState", true, false);

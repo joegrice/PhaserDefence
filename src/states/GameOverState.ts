@@ -1,6 +1,6 @@
 import * as Phaser from "phaser-ce";
 import { HighScores, Score } from "../models/HighScores";
-import GlobalState from "../models/GlobalState";
+import Configs from "../data/Configs";
 
 export class GameOverState extends Phaser.State {
 
@@ -38,10 +38,10 @@ export class GameOverState extends Phaser.State {
         });
 
         for(let i: number = 0; i < this.highscores.scores.length; i++) {
-            if (GlobalState.score > this.highscores.scores[i].score) {
+            if (Configs.score > this.highscores.scores[i].score) {
                 let name: string = prompt("Whats your name?");
                 this.highscores.scores[i].name = name;
-                this.highscores.scores[i].score = GlobalState.score;
+                this.highscores.scores[i].score = Configs.score;
                 return;
             }
         }
