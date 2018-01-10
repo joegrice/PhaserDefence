@@ -1,5 +1,5 @@
 import * as Phaser from "phaser-ce";
-import { Configs } from "../data/Configs";
+import { Configs } from "../configs/Configs";
 import Tower from "../towers/Tower";
 import Enemy from "../enemies/Enemy";
 import TowerBullet from "../bullets/TowerBullet";
@@ -123,11 +123,11 @@ export class GameState extends Phaser.State {
         }
     }
 
-    isOnSameRow(y1: number, y2: number, layer: Phaser.TilemapLayer): boolean {
+    isOnSameRow(obj1Y: number, obj2Y: number, layer: Phaser.TilemapLayer): boolean {
         let isOnSameRow: boolean = false;
-        let towerY: number = layer.getTileY(y1);
-        let enemyY: number = layer.getTileY(y2);
-        if (towerY === enemyY) {
+        let obj1YTileY: number = layer.getTileY(obj1Y);
+        let obj2YTileY: number = layer.getTileY(obj2Y);
+        if (obj1YTileY === obj2YTileY) {
             isOnSameRow = true;
         }
         return isOnSameRow;
@@ -135,7 +135,8 @@ export class GameState extends Phaser.State {
 
     isSpriteOnScreen(sprite: Phaser.Sprite): boolean {
         let isSpriteOnScreen: boolean = false;
-        if (sprite.world.x < 768 && sprite.world.y < 448) {
+        if (sprite.world.x < this.game.width && sprite.world.y < this.game.height
+            && sprite.world.x > 0 && sprite.world.y > 0) {
             isSpriteOnScreen = true;
         }
         return isSpriteOnScreen;
@@ -214,6 +215,7 @@ export class GameState extends Phaser.State {
     }
 
     updateLevel(): void {
+        Configs.level++;
         let levelText: string = "Level: " + Configs.level;
         var playText: Phaser.Text = this.game.add.text(this.game.width / 2, 250, levelText, { font: "50px Arial", fill: "#ffffff" });
         playText.anchor.x = Math.round(playText.width * 0.5) / playText.width;
@@ -221,7 +223,7 @@ export class GameState extends Phaser.State {
 
         this.addMoney(100);
         this.clearPlacedTowers();
-        let enemyHelper: EnemyFactory = new EnemyFactory(this, this.enemies);
+        let enemyHelper: EnemyFactory = new EnemyFactory(this);
         enemyHelper.generateEnemies(Configs.level + 30);
     }
 

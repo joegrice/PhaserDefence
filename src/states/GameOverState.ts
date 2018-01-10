@@ -1,6 +1,6 @@
 import * as Phaser from "phaser-ce";
 import { HighScores, Score } from "../models/HighScores";
-import Configs from "../data/Configs";
+import Configs from "../configs/Configs";
 
 export class GameOverState extends Phaser.State {
 

@@ -7,7 +7,7 @@ import { GameState } from "../states/GameState";
 import { EnemyFactory } from "../enemies/EnemyFactory";
 
 export class Configs {
-    static level = 1;
+    static level = 0;
     static money = 0;
     static score = 0;
 
@@ -104,7 +104,7 @@ export class Configs {
         healthVal: 10,
         price: 17,
         bulletSpeed: 200,
-        fireTimes: [Phaser.Timer.SECOND * 4],
+        fireTimes: [Phaser.Timer.SECOND * 3.5],
         deathSoundKey: "towerdeath",
         bulletConfig: Configs.BigTowerBulletConfig,
         barPosition: {
@@ -145,7 +145,7 @@ export class Configs {
     Configs.SmallGreenTowerState, Configs.SmallYellowTowerState];
 
     static resetStats(): void {
-        Configs.level = 1;
+        Configs.level = 0;
         Configs.money = 0;
         Configs.score = 0;
         Configs.BigTowerBulletConfig.attackDamage = 7;
@@ -187,7 +187,7 @@ export class Configs {
         if (enemy.gameState.isSpriteOnScreen(enemy)) {
             let rand: number = Math.floor((Math.random() * 5) + 1);
             if (rand === 2) {
-                let enemyFactory: EnemyFactory = new EnemyFactory(enemy.gameState, enemy.gameState.enemies);
+                let enemyFactory: EnemyFactory = new EnemyFactory(enemy.gameState);
                 enemyFactory.generateRandomWeakEnemy(enemy.y, enemy.x - 80);
                 enemy.game.add.tween(enemy).to({ alpha: 0 }, 200, "Linear", true, 0, 3, true);
             }

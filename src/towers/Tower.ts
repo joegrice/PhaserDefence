@@ -4,7 +4,7 @@ import GameState from "../states/GameState";
 import TowerBullet from "../bullets/TowerBullet";
 import { ITowerConfig } from "./ITowerConfig";
 import { ITowerBulletConfig } from "../bullets/ITowerBulletConfig";
-import { Configs } from "../data/Configs";
+import { Configs } from "../configs/Configs";
 
 export class Tower extends Phaser.Sprite {
 

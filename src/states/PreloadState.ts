@@ -1,5 +1,5 @@
 import * as Phaser from "phaser-ce";
-import Configs from "../data/Configs";
+import Configs from "../configs/Configs";
 
 export class PreloadState extends Phaser.State {
     constructor() {
